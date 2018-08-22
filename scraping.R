@@ -90,15 +90,15 @@ format_year <- function(year) {
 }
 
 
+# get all results from 1963 onwards
 pokal <- scrape_season(map_chr(1963:2017, format_year))
-
-
-count_stages <- pokal %>% count(season, stage)
 
 saveRDS(pokal, "dfbpokal_allseasons.RData")
 
-#library(microbenchmark)
-#microbenchmark(scrape_season(c("2016-17")))
+count_stages <- pokal %>% count(season, stage)
+
+
+
 
 
 
