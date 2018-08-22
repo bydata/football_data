@@ -17,7 +17,7 @@ get_content <- function(url) {
   # alternative: get 3. Bundesliga as well. Then all remaining teams would be 4th division and below.
 
 scrape_stage <- function(season, stage = 1) {
-  if (!stage %in% 1:6)  return(NULL)
+  if (!stage %in% 1:7)  return(NULL)
   url_vector <- c(base = "http://www.kicker.de/news/fussball/dfbpokal/spielrunde/dfb-pokal", 
                   season = season,
                   stage = stage, # value between 1 (1st stage) and 6 (final)
@@ -57,12 +57,12 @@ scrape_stage <- function(season, stage = 1) {
 scrape_season <- function(season) {
   season_n <- length(season)
   seasons <- vector("list", season_n)
-  stages <- vector("list", 6)
+  stages <- vector("list", 7)
   results <- map(seasons, function (x) x[[1]] <- stages) #broken
   
   for (s in 1:season_n) {
     message(str_c("Iterating season ", season[s], "."))
-    for (stage in 1:6) {
+    for (stage in 1:7) {
       message(str_c(" |__ Iterating stage ", stage, "."))
       tryCatch(
         results[[s]][[stage]] <- scrape_stage(season[s], stage),
@@ -76,16 +76,26 @@ scrape_season <- function(season) {
 
 # create correct season format just by starting year
 format_year <- function(year) {
-  if(!is.numeric(year)) return(NULL)
-  year %>%
-    str_c("-", year %% 100 + 1) 
+  if (!is.numeric(year)) return(NULL)
+  fmt <- ""
+  if (year == 1999) {
+    fmt <- "1999-00"
+  }
+  else if (year >= 2000 & year < 2009) {
+    fmt <- str_c(year, "-", "0", year %% 100 + 1)
+  }
+  else {
+    fmt <- str_c(year, "-", year %% 100 + 1)
+  }
 }
 
 
-pokal <- scrape_season(format_year(1963:2017))
-pokal %>% count(season, stage)
+pokal <- scrape_season(map_chr(1963:2017, format_year))
 
 
+count_stages <- pokal %>% count(season, stage)
+
+saveRDS(pokal, "dfbpokal_allseasons.RData")
 
 #library(microbenchmark)
 #microbenchmark(scrape_season(c("2016-17")))
