@@ -1,7 +1,6 @@
 
 library(tidyverse)
 library(rvest)
-#library(data.table)
 
 # retrieve page content - takes either a URL string or a vector of strings which constitute a url (will be collapsed to one string using "/")
 get_content <- function(url) {
@@ -12,12 +11,10 @@ get_content <- function(url) {
     read_html()
 }
 
-
-# need a list of teams in 1. and 2. Bundesliga for each season. Potential source: table of the respective season
-  # alternative: get 3. Bundesliga as well. Then all remaining teams would be 4th division and below.
-
+# scrapes all results from one competition stage; returns a formatted tibble with all results from the respective stage
 scrape_stage <- function(season, stage = 1) {
   if (!stage %in% 1:7)  return(NULL)
+  
   url_vector <- c(base = "http://www.kicker.de/news/fussball/dfbpokal/spielrunde/dfb-pokal", 
                   season = season,
                   stage = stage, # value between 1 (1st stage) and 6 (final)
@@ -29,7 +26,6 @@ scrape_stage <- function(season, stage = 1) {
   # extract result table using xpath and transform into data frame
   result_table <- html_node(page, xpath = "//table[@class='tStat tabdfb-pokal']")
   result_df <- html_table(result_table, fill = TRUE, header = TRUE) #use fill = TRUE due to inconsistent column numbers (at least in stage 1)
-  
   result_df <- result_df[, c(3, 5, 6)]
   
   # change column names
@@ -53,12 +49,12 @@ scrape_stage <- function(season, stage = 1) {
   as_tibble(result_df)
 }
 
-
+# scrape full competition results from kicker.de; returns a formatted tibble with all results from that season
 scrape_season <- function(season) {
   season_n <- length(season)
   seasons <- vector("list", season_n)
   stages <- vector("list", 7)
-  results <- map(seasons, function (x) x[[1]] <- stages) #broken
+  results <- map(seasons, function (x) x[[1]] <- stages)
   
   for (s in 1:season_n) {
     message(str_c("Iterating season ", season[s], "."))
@@ -72,7 +68,6 @@ scrape_season <- function(season) {
   }
   results %>% purrr::flatten() %>% data.table::rbindlist() %>% as_tibble()
 }
-
 
 # create correct season format just by starting year
 format_year <- function(year) {
@@ -89,7 +84,6 @@ format_year <- function(year) {
   }
 }
 
-
 # get all results from 1963 onwards
 pokal <- scrape_season(map_chr(1963:2017, format_year))
 
@@ -99,7 +93,6 @@ count_stages <- pokal %>% count(season, stage)
 
 
 
-
-
-
+# need a list of teams in 1. and 2. Bundesliga for each season. Potential source: table of the respective season
+# alternative: get 3. Bundesliga as well. Then all remaining teams would be 4th division and below.
 
