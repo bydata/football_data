@@ -40,8 +40,8 @@ scrape_stage <- function(season, stage = 1) {
       result_cleaned = str_trim(str_replace_all(result, "(n\\.V\\.|i\\.E\\.|\\(\\d+:\\d+\\))", "")),
       extratime = ifelse(str_detect(result, "n.V."), TRUE, FALSE),
       penalties = ifelse(str_detect(result, "i.E."), TRUE, FALSE),
-      home_goals = str_match(result_cleaned, "(\\d+):")[, 2],
-      away_goals = str_match(result_cleaned, ":(\\d+)")[, 2],
+      home_goals = as.numeric(str_match(result_cleaned, "(\\d+):")[, 2]),
+      away_goals = as.numeric(str_match(result_cleaned, ":(\\d+)")[, 2]),
       winner = as.factor(ifelse(home_goals > away_goals, "home", "away")) # there are no draws
     ) %>%
     select(season, stage, everything()) #reorder: put season and stage to the left
