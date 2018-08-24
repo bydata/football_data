@@ -1,11 +1,26 @@
 
 library(tidyverse)
+library(parallel)
+
 
 # scrape results - only run once and then comment out to save runtime
 source("scraping.R")
 
-# get all results from 1963 onwards
-pokal <- scrape_season(map_chr(1981:2017, format_year))
+# get all results from 1963/1981 onwards - use parallelisation
+system.time( {
+  no_cores <- detectCores() - 1
+  cl <- makeCluster(no_cores)
+  clusterExport(cl, as.list(unique(c(ls(.GlobalEnv),ls(environment())))),envir=environment())
+  clusterEvalQ(cl,
+               {library(tidyverse)
+                 library(rvest)
+                 }
+               )
+  pokal <- parLapply(cl, map_chr(1981:2017, format_year), scrape_season)
+  stopCluster(cl)
+  pokal <- as_tibble(data.table::rbindlist(pokal))
+})
+
 saveRDS(pokal, "dfbpokal_allseasons.RData")
 #count_stages <- pokal %>% count(season, stage)
 

@@ -17,7 +17,7 @@ scrape_stage <- function(season, stage = 1) {
   
   url_vector <- c(base = "http://www.kicker.de/news/fussball/dfbpokal/spielrunde/dfb-pokal", 
                   season = season,
-                  stage = stage, # value between 1 (1st stage) and 6 (final)
+                  stage = stage, # value between 1 (1st stage) and 6 or 7 (final)
                   suffix = "0/spieltag.html"
                   )
   
@@ -42,7 +42,7 @@ scrape_stage <- function(season, stage = 1) {
       penalties = ifelse(str_detect(result, "i.E."), TRUE, FALSE),
       home_goals = as.numeric(str_match(result_cleaned, "(\\d+):")[, 2]),
       away_goals = as.numeric(str_match(result_cleaned, ":(\\d+)")[, 2]),
-      winner = as.factor(ifelse(home_goals > away_goals, "home", "away"), levels = c("home", "away")) # there are no draws
+      winner = factor(ifelse(home_goals > away_goals, "home", "away"), levels = c("home", "away")) # there are no draws
     ) %>%
     select(season, stage, everything()) #reorder: put season and stage to the left
   
@@ -57,12 +57,18 @@ scrape_season <- function(season) {
   results <- map(seasons, function (x) x[[1]] <- stages)
   
   for (s in 1:season_n) {
-    message(str_c("Iterating season ", season[s], "."))
+    #message(str_c("Iterating season ", season[s], "."))
     for (stage in 1:7) {
-      message(str_c(" |__ Iterating stage ", stage, "."))
+      # data for 1991-92 contain some pre-qualification rounds
+      if (season == "1991-92") stage <- stage + 4
+      
+      #message(str_c(" |__ Iterating stage ", stage, "."))
       tryCatch(
         results[[s]][[stage]] <- scrape_stage(season[s], stage),
-        error = function(e) return(data.frame())
+        error = function(e) {
+          message(str_c("Error:", season[s], stage, sep = " "))
+          return(data.frame())
+        }  
       )
     }
   }
