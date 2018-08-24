@@ -42,7 +42,7 @@ scrape_stage <- function(season, stage = 1) {
       penalties = ifelse(str_detect(result, "i.E."), TRUE, FALSE),
       home_goals = as.numeric(str_match(result_cleaned, "(\\d+):")[, 2]),
       away_goals = as.numeric(str_match(result_cleaned, ":(\\d+)")[, 2]),
-      winner = as.factor(ifelse(home_goals > away_goals, "home", "away")) # there are no draws
+      winner = as.factor(ifelse(home_goals > away_goals, "home", "away"), levels = c("home", "away")) # there are no draws
     ) %>%
     select(season, stage, everything()) #reorder: put season and stage to the left
   
@@ -84,15 +84,48 @@ format_year <- function(year) {
   }
 }
 
-# get all results from 1963 onwards
-pokal <- scrape_season(map_chr(1963:2017, format_year))
 
-saveRDS(pokal, "dfbpokal_allseasons.RData")
-
-count_stages <- pokal %>% count(season, stage)
-
-
-
-# need a list of teams in 1. and 2. Bundesliga for each season. Potential source: table of the respective season
-# alternative: get 3. Bundesliga as well. Then all remaining teams would be 4th division and below.
-
+# scrape league table
+scrape_league_table <- function(league, year) {
+  
+  league_url_parts <- vector("character", 2)
+  if (league == "1. Bundesliga") {
+    league_url_parts <- c("bundesliga", "1-bundesliga")
+  } else if (league == "2. Bundesliga") {
+    if (year < 1981 | year == 1991) return(NULL) # introduction of 2. Bundesliga in 1981 and 2 divisions in 1991
+    league_url_parts <- c("2bundesliga", "2-bundesliga")
+  }
+  
+  url <- str_c("http://www.kicker.de/news/fussball",
+               league_url_parts[1],
+               "spieltag",
+               league_url_parts[2],
+               format_year(year),
+               "spieltag.html",
+               sep = "/"
+  )
+  
+  page <- get_content(url)
+  # extract result table using xpath and transform into data frame
+  tryCatch(
+    {
+      result_table <- html_node(page, xpath = "//table[@class='tStat']")
+      result_df <- html_table(result_table, fill = TRUE, header = TRUE) #use fill = TRUE due to inconsistent column numbers (at least in stage 1)
+      result_df <- result_df[, c(1, 3, 5, 7, 8, 9, 11, 12, 14)]
+      colnames(result_df) <- c("seed", "club", "games", "W", "D", "L", "goal_ratio", "goal_diff", "points")
+    },
+    error = function(e) return(NULL)
+  )
+  # delete empty rows and format results
+  result_df %>%
+    filter(club != "") %>%
+    mutate(
+      club = str_trim(str_replace(club, "\\s\\((M|P|M,\\sP|N|A)\\)", "")), # remove indicators for previous year's status
+      league = league,
+      season = format_year(year),
+      goals_scored = as.numeric(str_match(goal_ratio, "(\\d+):")[, 2]),
+      goals_against = as.numeric(str_match(goal_ratio, ":(\\d+)")[, 2])
+    ) %>%
+    select(league, season, everything()) %>%
+    as_tibble()
+}
