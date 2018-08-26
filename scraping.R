@@ -44,6 +44,7 @@ scrape_stage <- function(season, stage = 1) {
       away_goals = as.numeric(str_match(result_cleaned, ":(\\d+)")[, 2]),
       winner = factor(ifelse(home_goals > away_goals, "home", "away"), levels = c("home", "away")) # there are no draws
     ) %>%
+    filter(home_goals != away_goals) %>% # until the 80s ties were resolved in a rematch; keep only the rematch result
     select(season, stage, everything()) #reorder: put season and stage to the left
   
   as_tibble(result_df)
@@ -119,19 +120,31 @@ scrape_league_table <- function(league, year) {
       result_df <- html_table(result_table, fill = TRUE, header = TRUE) #use fill = TRUE due to inconsistent column numbers (at least in stage 1)
       result_df <- result_df[, c(1, 3, 5, 7, 8, 9, 11, 12, 14)]
       colnames(result_df) <- c("seed", "club", "games", "W", "D", "L", "goal_ratio", "goal_diff", "points")
+      # delete empty rows and format results
+      result_df %>%
+        filter(club != "") %>%
+        mutate(
+          preseason = str_match(club, "\\s\\((M|P|M,\\sP|P,\\sA|N|A)\\)|\\*")[, 2],
+          club = str_trim(str_replace_all(club, "\\s\\((M|P|M,\\sP|(P,\\sA)|N|A)\\)|\\*", "")), #remove indicators for previous year's status
+          club = ifelse(club == "1. FC Dynamo Dresden", "Dynamo Dresden", club),
+          league = league,
+          season = format_year(year),
+          goals_scored = as.numeric(str_match(goal_ratio, "(\\d+):")[, 2]),
+          goals_against = as.numeric(str_match(goal_ratio, ":(\\d+)")[, 2])
+        ) %>%
+        select(league, season, everything(), preseason) %>%
+        as_tibble()
     },
     error = function(e) return(NULL)
   )
-  # delete empty rows and format results
-  result_df %>%
-    filter(club != "") %>%
-    mutate(
-      club = str_trim(str_replace(club, "\\s\\((M|P|M,\\sP|N|A)\\)", "")), # remove indicators for previous year's status
-      league = league,
-      season = format_year(year),
-      goals_scored = as.numeric(str_match(goal_ratio, "(\\d+):")[, 2]),
-      goals_against = as.numeric(str_match(goal_ratio, ":(\\d+)")[, 2])
-    ) %>%
-    select(league, season, everything()) %>%
-    as_tibble()
 }
+
+
+# helper function to call scrape_league_table within parLapply
+scrape_league_table_parallel <- function(args) {
+  if (typeof(args) != "list" || is.null(args[["league"]]) || is.null(args[["year"]])) {
+    return(NULL)
+  } 
+  scrape_league_table(args[["league"]], args[["year"]]) 
+}
+
