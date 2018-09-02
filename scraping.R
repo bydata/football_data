@@ -13,7 +13,6 @@ get_content <- function(url) {
 
 # scrapes all results from one competition stage; returns a formatted tibble with all results from the respective stage
 scrape_stage <- function(season, stage = 1) {
-  if (!stage %in% 1:7)  return(NULL)
   
   url_vector <- c(base = "http://www.kicker.de/news/fussball/dfbpokal/spielrunde/dfb-pokal", 
                   season = season,
@@ -37,6 +36,7 @@ scrape_stage <- function(season, stage = 1) {
     mutate(
       season = season,
       stage = stage,
+      stage = ifelse(season == "1991-92", stage - 4, stage), #correction for pre-cup stages in 1991-92
       result_cleaned = str_trim(str_replace_all(result, "(n\\.V\\.|i\\.E\\.|\\(\\d+:\\d+\\))", "")),
       extratime = ifelse(str_detect(result, "n.V."), TRUE, FALSE),
       penalties = ifelse(str_detect(result, "i.E."), TRUE, FALSE),

@@ -36,8 +36,8 @@ bundesliga2_df <- map2("2. Bundesliga", 1981:2017, scrape_league_table) %>%
   data.table::rbindlist()
 })
 
-table(bundesliga1_df$preseason)
-table(bundesliga2_df$preseason)
+saveRDS(bundesliga1_df, "bundesliga1_df.RData")
+saveRDS(bundesliga2_df, "bundesliga2_df.RData")
 
 # provides a tibble "clubnames"
 clubnames <- read_tsv("clubnames.tsv")
@@ -66,6 +66,14 @@ pokal_clean <- pokal %>%
     ),
     away = ifelse(away == "Uerdingen", 
                   ifelse(season >= "1995-96", "KFC Uerdingen 05", "Bayer 05 Uerdingen"),
+                  away
+    ),
+    home = ifelse(home == "Remscheid", 
+                   ifelse(season >= "1990-91", "FC Remscheid", "BVL Remscheid"),
+                   home
+    ),
+    away = ifelse(away == "Remscheid", 
+                  ifelse(season >= "1990-91", "FC Remscheid", "BVL Remscheid"),
                   away
     )
   ) 
@@ -121,37 +129,14 @@ pokal_league_tidy <- pokal_league %>%
   mutate(home_away = factor(home_away, levels = c("home", "away")),
          league = ifelse(home_away == "home", home_league, away_league),
          opponent_league = ifelse(home_away == "home", away_league, home_league),
+         bl2_started_earlier = (season >= "2011-12"),
          won = ifelse((home_away == "home" & winner == 1) | (home_away == "away" & winner == 2), TRUE, FALSE)
          ) %>%
-  select(match_key, season, stage, club, league, opponent_league, home_away, won) %>%
+  select(match_key, season, stage, club, league, opponent_league, home_away, won, bl2_started_earlier) %>%
   arrange(match_key, home_away)
 
 
 # check if join and mapping of clubnames was successful
-# season_check <- "2002-03"
-# lower_divisions <- pokal_league_tidy %>%
-#   filter(league == "3. and below" & season == season_check) %>%
-#   select(club, league) %>%
-#   distinct() %>%
-#   arrange(club)
-# 
-# bl1_season <- bundesliga1_df %>%
-#   filter(season == season_check) %>%
-#   select(season, club) %>%
-#   arrange(club)
-# 
-# bl2_season <- bundesliga2_df %>%
-#   filter(season == season_check) %>%
-#   select(season, club) %>%
-#   arrange(club)
-# 
-# pokal_league_tidy %>%
-#   filter(stage == 1, season == season_check) %>%
-#   count(league)
-# 
-# bl2_season %>%
-#   anti_join(pokal_league_tidy, by = c("club", "season"))
-
 # for all seasons - check missing matches between league tables and cup teams
 bundesliga1_df %>%
   select(season, club) %>%
@@ -163,25 +148,75 @@ bundesliga2_df %>%
   anti_join(pokal_league_tidy, by = c("club", "season")) %>%
   distinct()
 
+bundesliga2_df %>%
+  select(season, club, preseason) %>%
+  anti_join(pokal_league_tidy, by = c("club", "season")) %>%
+  filter(is.na(preseason)) %>%
+  distinct()
 
 
-
-
-
-# exploration
+# how many seasons had 7 stages?
 pokal_league_tidy %>%
-  filter(league == "1. Bundesliga" & opponent_league == "2. Bundesliga" | league == "2. Bundesliga" & opponent_league == "1. Bundesliga" ) %>%
-  filter(league == "2. Bundesliga" & won)
+  distinct(season, stage) %>%
+  count(stage)
+# which seasons had 7 stages?
+(season_to_remove <- pokal_league_tidy %>%
+    filter(stage == 7) %>%
+    distinct(season)
+)
 
-pokal_league_tidy %>%
-  filter(league == "2. Bundesliga" & opponent_league == "1. Bundesliga") %>%
-  mutate(bl2_started_earlier = season >= "2011-12") %>%
+# remove 5 seasons with 7 stages
+pokal_league_tidy_2 <- pokal_league_tidy %>%
+  anti_join(season_to_remove, by = "season")
+
+str(pokal_league_tidy_2)
+
+
+# EXPLORATION
+
+pokal_league_tidy_2 %>%
+  filter(league == "1. Bundesliga" & opponent_league == "2. Bundesliga") %>%
   group_by(bl2_started_earlier, stage, league) %>%
   summarize(win_share = mean(won),
             total = n()
             ) %>%
-  arrange(stage, bl2_started_earlier)
+  arrange(stage, bl2_started_earlier) %>%
+  ggplot(aes(stage, win_share, fill = bl2_started_earlier)) +
+  geom_col(position = "dodge")
 
-bl1vsbl2 <- pokal_league_tidy %>%
-  filter(league == "2. Bundesliga" & opponent_league == "1. Bundesliga" & stage == 1)
 
+
+pokal_league_tidy_2 %>%
+  filter(league == "1. Bundesliga" & opponent_league == "2. Bundesliga" & stage == 1)
+
+pokal_league_tidy_2 %>%
+  filter(league == "1. Bundesliga" & opponent_league == "2. Bundesliga" & stage == 6)
+
+pokal_league_tidy_2 %>%
+  filter(league == "1. Bundesliga" & opponent_league == "2. Bundesliga") %>%
+  count(stage)
+
+
+logodds2prob <- function(x) {
+  odds <- exp(x)
+  prob <- odds / (1 + odds)
+  prob
+}
+
+
+
+
+pokal_1blvs2bl <- pokal_league_tidy_2 %>%
+  filter(league == "1. Bundesliga" & opponent_league == "2. Bundesliga") %>%
+  mutate(stage1 = stage == 1)
+
+win_model <- glm(won ~ stage, pokal_1bl, family = binomial)
+summary(win_model)
+
+logodds2prob(win_model$coefficients)
+
+
+win_model_2 <- glm(won ~ bl2_started_earlier*stage1, pokal_1blvs2bl, family = binomial)
+summary(win_model_2)
+
+logodds2prob(win_model_2$coefficients)
