@@ -13,7 +13,6 @@ get_content <- function(url) {
 
 # scrapes all results from one competition stage; returns a formatted tibble with all results from the respective stage
 scrape_stage <- function(season, stage = 1) {
-  
   url_vector <- c(base = "http://www.kicker.de/news/fussball/dfbpokal/spielrunde/dfb-pokal", 
                   season = season,
                   stage = stage, # value between 1 (1st stage) and 6 or 7 (final)
@@ -58,12 +57,9 @@ scrape_season <- function(season) {
   results <- map(seasons, function (x) x[[1]] <- stages)
   
   for (s in 1:season_n) {
-    #message(str_c("Iterating season ", season[s], "."))
     for (stage in 1:7) {
       # data for 1991-92 contain some pre-qualification rounds
       if (season == "1991-92") stage <- stage + 4
-      
-      #message(str_c(" |__ Iterating stage ", stage, "."))
       tryCatch(
         results[[s]][[stage]] <- scrape_stage(season[s], stage),
         error = function(e) {
@@ -79,7 +75,6 @@ scrape_season <- function(season) {
 # create correct season format just by starting year
 format_year <- function(year) {
   if (!is.numeric(year)) return(NULL)
-  fmt <- ""
   if (year == 1999) {
     fmt <- "1999-00"
   }
@@ -91,10 +86,8 @@ format_year <- function(year) {
   }
 }
 
-
 # scrape league table
 scrape_league_table <- function(league, year) {
-  
   league_url_parts <- vector("character", 2)
   if (league == "1. Bundesliga") {
     league_url_parts <- c("bundesliga", "1-bundesliga")
@@ -111,7 +104,6 @@ scrape_league_table <- function(league, year) {
                "spieltag.html",
                sep = "/"
   )
-  
   page <- get_content(url)
   # extract result table using xpath and transform into data frame
   tryCatch(
@@ -147,4 +139,87 @@ scrape_league_table_parallel <- function(args) {
   } 
   scrape_league_table(args[["league"]], args[["year"]]) 
 }
+
+scrape_season_results <- function(league, year, exclude.na = TRUE) {
+  league_url_parts <- vector("character", 2)
+  if (league == "1. Bundesliga") {
+    league_url_parts <- c("bundesliga", "1-bundesliga")
+  } else if (league == "2. Bundesliga") {
+    if (year < 1981 | year == 1991) return(NULL) # introduction of 2. Bundesliga in 1981 and 2 divisions in 1991
+    league_url_parts <- c("2bundesliga", "2-bundesliga")
+  }
+  
+  #http://www.kicker.de/ajax.ashx?ajaxtype=kreuztabelle&boxID=tabellen&liganame=1-bundesliga&saison=2017-18&spieltag=0&turniergruppe=0&
+
+  url <- str_c("http://www.kicker.de/ajax.ashx?ajaxtype=kreuztabelle&boxID=tabellen",
+               "&liganame=", league_url_parts[2],
+               "&saison=", format_year(year),
+               "&spieltag=0&turniergruppe=0&"
+  )
+  
+  page <- get_content(url)
+  # extract result table using xpath and transform into data frame
+  #tryCatch(
+   # {
+      
+      # returns a data frame without column names and (row) values
+      result_table <- html_node(page, xpath = "//table[@class='tStat kreuztab']")
+      
+      result_df <- html_table(result_table, fill = TRUE, header = FALSE) 
+      
+      if (year <= 1964) {
+        result_df <- result_df %>%
+          select(X2:X17) %>%
+          na_if("") %>%
+          filter(rowSums(is.na(.)) != 16)
+      } else if (year == 1991) {
+        result_df <- result_df %>%
+          select(X2:X21) %>%
+          na_if("") %>%
+          filter(rowSums(is.na(.)) != 20)
+      } else {
+        result_df <- result_df %>%
+          select(X2:X19) %>%
+          na_if("") %>%
+          filter(rowSums(is.na(.)) != 18)
+      }
+      
+      # parse column names from td elements
+      column_header <- html_nodes(page, xpath = "//table[@class='tStat kreuztab']/tr[1]/td/img") %>%
+        html_attr("title")
+      
+      colnames(result_df) <- column_header
+      
+      # parse row values
+      home_team <- html_nodes(page, xpath = "//table[@class='tStat kreuztab']/tr[*]/td[1]/img") %>%
+        html_attr("title")
+      
+      matches <- cbind(home_team, result_df) %>% 
+        as_tibble() %>%
+        gather(key = away_team, value = result, -home_team, factor_key = FALSE) %>%
+        filter(home_team != away_team) %>%
+        mutate(
+               home_team = as.character(home_team),   
+               season = format_year(year),
+               home_goals = as.numeric(str_match(result, "(\\d+)-")[, 2]),
+               away_goals = as.numeric(str_match(result, "-(\\d+)")[, 2])
+               ) %>%
+        select(season, home_team, everything())
+      
+      if (exclude.na) {
+        matches <- matches %>%
+          filter(!is.na(result))
+      }
+      
+      matches
+   # },
+   # error = function(e) {
+  #    msg = str_c("Error in year ", year)
+  #    stop(msg)
+  #  }
+ # )
+}
+
+#results_1993 <- scrape_season_results("1. Bundesliga", 1993)
+
 

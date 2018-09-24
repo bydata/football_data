@@ -114,3 +114,19 @@ seed_chart("Borussia Dortmund", colors = c("#ffcc00", "black"))
 seed_chart("Bayern München", colors = c("red", "blue"))
 seed_chart("MSV Duisburg")
 seed_chart("Hamburger SV", colors = c("blue", "black"))
+
+
+
+# number of different champions per decade
+bundesliga_df %>%
+  mutate(decade = floor(year / 10) * 10) %>%
+  filter(seed == 1) %>%
+  group_by(decade) %>%
+  summarize(different_champions = n_distinct(club),
+            success_title_defence_c = sum(str_detect(preseason, "M"), na.rm = TRUE)) %>%
+  ggplot(aes(decade, different_champions, fill = success_title_defence_c)) +
+  geom_col() +
+  ggthemes::theme_fivethirtyeight()
+
+
+  
