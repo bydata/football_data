@@ -131,16 +131,17 @@ scrape_league_table <- function(league, year) {
   )
 }
 
-
 # helper function to call scrape_league_table within parLapply
-scrape_league_table_parallel <- function(args) {
-  if (typeof(args) != "list" || is.null(args[["league"]]) || is.null(args[["year"]])) {
-    return(NULL)
-  } 
-  scrape_league_table(args[["league"]], args[["year"]]) 
-}
+# scrape_league_table_parallel <- function(args) {
+#   if (typeof(args) != "list" || is.null(args[["league"]]) || is.null(args[["year"]])) {
+#     return(NULL)
+#   } 
+#   scrape_league_table(args[["league"]], args[["year"]]) 
+# }
 
 scrape_season_results <- function(league, year, exclude.na = TRUE) {
+  # 2. Bundesliga not supported by now
+  if (league == "2. Bundesliga") stop("2. Bundesliga not supported.")
   league_url_parts <- vector("character", 2)
   if (league == "1. Bundesliga") {
     league_url_parts <- c("bundesliga", "1-bundesliga")
@@ -154,30 +155,28 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
   url <- str_c("http://www.kicker.de/ajax.ashx?ajaxtype=kreuztabelle&boxID=tabellen",
                "&liganame=", league_url_parts[2],
                "&saison=", format_year(year),
-               "&spieltag=0&turniergruppe=0&"
-  )
+               "&spieltag=0&turniergruppe=0&")
   
   page <- get_content(url)
   # extract result table using xpath and transform into data frame
   #tryCatch(
    # {
-      
       # returns a data frame without column names and (row) values
       result_table <- html_node(page, xpath = "//table[@class='tStat kreuztab']")
       
       result_df <- html_table(result_table, fill = TRUE, header = FALSE) 
       
-      if (year <= 1964) {
+      if (year <= 1964) { # 16 teams
         result_df <- result_df %>%
           select(X2:X17) %>%
           na_if("") %>%
           filter(rowSums(is.na(.)) != 16)
-      } else if (year == 1991) {
+      } else if (year == 1991) { # 20 teams
         result_df <- result_df %>%
           select(X2:X21) %>%
           na_if("") %>%
           filter(rowSums(is.na(.)) != 20)
-      } else {
+      } else { # 18 teams
         result_df <- result_df %>%
           select(X2:X19) %>%
           na_if("") %>%
@@ -194,6 +193,31 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
       home_team <- html_nodes(page, xpath = "//table[@class='tStat kreuztab']/tr[*]/td[1]/img") %>%
         html_attr("title")
       
+      # parse match day
+        match_day_regex <- str_c("/news/fussball/bundesliga/spieltag/", league_url_parts[2], "/\\d{4}-\\d{2}/(\\d{1,2})/")
+        match_days_raw <- html_nodes(page, xpath = "//table[@class='tStat kreuztab']/tr[*]/td[*]/a[@class='link_noicon']") %>%
+        html_attr("href") %>%
+        str_match(match_day_regex)
+        
+        match_days_vec <- as.numeric(match_days_raw[, 2])
+        
+        # create a vector with NAs of size = number of teams in league
+        no_of_teams <- length(home_team)
+        NA_vec <- rep(NA, no_of_teams)
+        # create a vector of row-wise positions for self-self matches in cross-table
+        cross_vec <- vector("numeric", no_of_teams)
+        for (i in 1:no_of_teams) {
+          cross_vec[i] <- (i - 1) * no_of_teams + 0.5
+        }
+        # merge scraped vector of match days with NA vector
+        match_days <- c(match_days_vec, NA_vec)
+        # create a new vector with indices, every new element get half-ranked in order to be inserted in front of the next element
+        ind <- c(seq_along(match_days_vec), cross_vec)
+        # re-order based on new index
+        match_days <- match_days[order(ind)]
+        # create a matrix 
+        match_days_mat <- matrix(match_days, ncol = no_of_teams, byrow = TRUE)
+
       matches <- cbind(home_team, result_df) %>% 
         as_tibble() %>%
         gather(key = away_team, value = result, -home_team, factor_key = FALSE) %>%
@@ -210,7 +234,10 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
         matches <- matches %>%
           filter(!is.na(result))
       }
-      
+      # need to invert the match days to have the correct assignment of first and second half of the campaign
+      match_days_half <- no_of_teams - 1
+      match_days_vec <- ifelse(match_days_vec > match_days_half, match_days_vec - match_days_half, match_days_vec + match_days_half)
+      matches <- cbind(matches, match_day = match_days_vec) 
       matches
    # },
    # error = function(e) {
@@ -220,6 +247,6 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
  # )
 }
 
-#results_1993 <- scrape_season_results("1. Bundesliga", 1993)
+#results_2011 <- scrape_season_results("1. Bundesliga", 2011)
 
-
+results_1963 <- scrape_season_results("1. Bundesliga", 1963)
