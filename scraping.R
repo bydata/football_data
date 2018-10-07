@@ -117,7 +117,7 @@ scrape_league_table <- function(league, year) {
         filter(club != "") %>%
         mutate(
           preseason = str_match(club, "\\s\\((M|P|M,\\sP|P,\\sA|N|A)\\)|\\*")[, 2],
-          club = str_trim(str_replace_all(club, "\\s\\((M|P|M,\\sP|(P,\\sA)|N|A)\\)|\\*", "")), #remove indicators for previous year's status
+          club = str_trim(str_replace_all(club, "\\s\\((M|P|M,\\sP|(P,\\sA)|(P,\\sN)|N|A)\\)|\\*", "")), #remove indicators for previous year's status
           club = ifelse(club == "1. FC Dynamo Dresden", "Dynamo Dresden", club),
           league = league,
           season = format_year(year),
@@ -246,7 +246,3 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
   #  }
  # )
 }
-
-#results_2011 <- scrape_season_results("1. Bundesliga", 2011)
-
-results_1963 <- scrape_season_results("1. Bundesliga", 1963)
