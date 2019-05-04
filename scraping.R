@@ -92,7 +92,7 @@ scrape_league_table <- function(league, year) {
   if (league == "1. Bundesliga") {
     league_url_parts <- c("bundesliga", "1-bundesliga")
   } else if (league == "2. Bundesliga") {
-    if (year < 1981 | year == 1991) return(NULL) # introduction of 2. Bundesliga in 1981 and 2 divisions in 1991
+    if (any(year < 1981 | year == 1991)) return(NULL) # introduction of 2. Bundesliga in 1981 and 2 divisions in 1991
     league_url_parts <- c("2bundesliga", "2-bundesliga")
   }
   
@@ -104,14 +104,17 @@ scrape_league_table <- function(league, year) {
                "spieltag.html",
                sep = "/"
   )
+  
   page <- get_content(url)
   # extract result table using xpath and transform into data frame
   tryCatch(
     {
       result_table <- html_node(page, xpath = "//table[@class='tStat']")
       result_df <- html_table(result_table, fill = TRUE, header = TRUE) #use fill = TRUE due to inconsistent column numbers (at least in stage 1)
-      result_df <- result_df[, c(1, 3, 5, 7, 8, 9, 11, 12, 14)]
-      colnames(result_df) <- c("seed", "club", "games", "W", "D", "L", "goal_ratio", "goal_diff", "points")
+      #result_df <- result_df[, c(1, 3, 5, 7, 8, 9, 11, 12, 14)]
+      #colnames(result_df) <- c("seed", "club", "games", "W", "D", "L", "goal_ratio", "goal_diff", "points")
+      result_df <- result_df[, c(1, 3, 5, 7, 8, 9, 11, 12)]
+      colnames(result_df) <- c("seed", "club", "games", "W", "D", "L", "goal_ratio", "goal_diff")
       # delete empty rows and format results
       result_df %>%
         filter(club != "") %>%
@@ -122,12 +125,18 @@ scrape_league_table <- function(league, year) {
           league = league,
           season = format_year(year),
           goals_scored = as.numeric(str_match(goal_ratio, "(\\d+):")[, 2]),
-          goals_against = as.numeric(str_match(goal_ratio, ":(\\d+)")[, 2])
+          goals_against = as.numeric(str_match(goal_ratio, ":(\\d+)")[, 2]),
+          points_2pt = 2 * W + D,
+          points_3pt = 3 * W + D
         ) %>%
         select(league, season, everything(), preseason) %>%
         as_tibble()
     },
-    error = function(e) return(NULL)
+    error = function(e) {
+      msg <- paste("Some issue with year", year)
+      warning(msg)
+      return(NULL)
+    }
   )
 }
 
@@ -202,21 +211,21 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
         match_days_vec <- as.numeric(match_days_raw[, 2])
         
         # create a vector with NAs of size = number of teams in league
-        no_of_teams <- length(home_team)
-        NA_vec <- rep(NA, no_of_teams)
-        # create a vector of row-wise positions for self-self matches in cross-table
-        cross_vec <- vector("numeric", no_of_teams)
-        for (i in 1:no_of_teams) {
-          cross_vec[i] <- (i - 1) * no_of_teams + 0.5
-        }
-        # merge scraped vector of match days with NA vector
-        match_days <- c(match_days_vec, NA_vec)
-        # create a new vector with indices, every new element get half-ranked in order to be inserted in front of the next element
-        ind <- c(seq_along(match_days_vec), cross_vec)
-        # re-order based on new index
-        match_days <- match_days[order(ind)]
-        # create a matrix 
-        match_days_mat <- matrix(match_days, ncol = no_of_teams, byrow = TRUE)
+        # no_of_teams <- length(home_team)
+        # NA_vec <- rep(NA, no_of_teams)
+        # # create a vector of row-wise positions for self-self matches in cross-table
+        # cross_vec <- vector("numeric", no_of_teams)
+        # for (i in 1:no_of_teams) {
+        #   cross_vec[i] <- (i - 1) * no_of_teams + 0.5
+        # }
+        # # merge scraped vector of match days with NA vector
+        # match_days <- c(match_days_vec, NA_vec)
+        # # create a new vector with indices, every new element get half-ranked in order to be inserted in front of the next element
+        # ind <- c(seq_along(match_days_vec), cross_vec)
+        # # re-order based on new index
+        # match_days <- match_days[order(ind)]
+        # # create a matrix 
+        # match_days_mat <- matrix(match_days, ncol = no_of_teams, byrow = TRUE)
 
       matches <- cbind(home_team, result_df) %>% 
         as_tibble() %>%
@@ -235,9 +244,9 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
           filter(!is.na(result))
       }
       # need to invert the match days to have the correct assignment of first and second half of the campaign
-      match_days_half <- no_of_teams - 1
-      match_days_vec <- ifelse(match_days_vec > match_days_half, match_days_vec - match_days_half, match_days_vec + match_days_half)
-      matches <- cbind(matches, match_day = match_days_vec) 
+      #match_days_half <- no_of_teams - 1
+      #match_days_vec <- ifelse(match_days_vec > match_days_half, match_days_vec - match_days_half, match_days_vec + match_days_half)
+      # matches <- cbind(matches, match_day = match_days_vec) # to be fixed
       matches
    # },
    # error = function(e) {
@@ -246,3 +255,4 @@ scrape_season_results <- function(league, year, exclude.na = TRUE) {
   #  }
  # )
 }
+

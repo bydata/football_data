@@ -218,5 +218,5 @@ for (i in 1:n_seasons) {
   res_by_year[i] <- elo.seq(winner = matches$winner, loser = matches$loser, draw = matches$draw, Date = matches$date, k = 24)
 }
 
-res_by_year[[1]]
+str(res_by_year)
 
