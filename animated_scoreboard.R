@@ -92,7 +92,7 @@ p <- bl_cumul_ordered %>%
   #filter(season <= "1970") %>% 
   ggplot(aes(order, group = club, fill = club)) +
   geom_tile(aes(y = points_cumul/2, height = points_cumul), 
-            width = 0.8, color = NA, alpha = 0.7, show.legend = FALSE) +
+            width = 0.8, color = NA, alpha = 0.6, show.legend = FALSE) +
   geom_text(aes(label = str_c("  ", club)), y = 0, size = 4, vjust = 0.25, hjust = 0) +
   coord_flip() +
   scale_x_reverse(breaks = bl_cumul_ordered$order) +
@@ -114,7 +114,26 @@ p <- bl_cumul_ordered %>%
   scale_fill_manual(values = club_colors)
 p
 
+# frames per second
+fps <- 20
+
 anim <- p + transition_states(season, wrap = FALSE)  + view_follow(fixed_y = TRUE)
-animate(anim, nframes = 15 * seasons_n, fps = 20, width = 1000, height = 800)
+animate(anim, nframes = 15 * seasons_n, fps = fps, width = 1000, height = 800, end_pause = 5 * fps)
 #animate(anim, nframes = 5 * seasons_n, fps = 3, width = 1000, height = 800)
 anim_save("ewige_tabelle.gif")  
+
+
+first_ranked <- bl_cumul_ordered %>%
+  filter(order == 1)
+# only 2 clubs on first rank: Köln & Bay. München (from 1980-81 onwards)
+
+bl_cumul_ordered %>%
+  filter(points_cumul > 0) %>%
+  group_by(club) %>%
+  summarize(
+    diff = last(order, order_by = season) - min(order),
+    top = min(order),
+    least = max(order)
+    ) %>%
+  arrange(desc(diff))
+
