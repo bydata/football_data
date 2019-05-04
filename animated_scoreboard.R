@@ -89,7 +89,7 @@ display_clubs_n <- 25
 
 p <- bl_cumul_ordered %>%
   filter(points_cumul > 0 & order <= display_clubs_n) %>%
-  #filter(season <= "1970") %>% 
+  #filter(season <= "1968") %>% 
   ggplot(aes(order, group = club, fill = club)) +
   geom_tile(aes(y = points_cumul/2, height = points_cumul), 
             width = 0.8, color = NA, alpha = 0.6, show.legend = FALSE) +
@@ -105,11 +105,13 @@ p <- bl_cumul_ordered %>%
   theme(
     axis.text = element_blank(), 
     axis.ticks = element_blank(),
-    panel.grid.major=element_blank(),
-    panel.grid.minor=element_blank(),
-    panel.border=element_blank(),
-    plot.title=element_text(size = 25, face = "bold"),
-    plot.subtitle=element_text(size = 15, hjust = 0)
+    panel.background = element_blank(),
+    panel.grid = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    plot.title = element_text(size = 25, face = "bold"),
+    plot.subtitle = element_text(size = 15, hjust = 0)
   ) +
   scale_fill_manual(values = club_colors)
 p
@@ -119,13 +121,43 @@ fps <- 20
 
 anim <- p + transition_states(season, wrap = FALSE)  + view_follow(fixed_y = TRUE)
 animate(anim, nframes = 15 * seasons_n, fps = fps, width = 1000, height = 800, end_pause = 5 * fps)
-#animate(anim, nframes = 5 * seasons_n, fps = 3, width = 1000, height = 800)
+#animate(anim, nframes = 50, fps = 3, width = 1000, height = 800)
 anim_save("ewige_tabelle.gif")  
 
 
-first_ranked <- bl_cumul_ordered %>%
-  filter(order == 1)
+bl_cumul_ordered %>%
+  filter(order == 1) %>%
+  group_by(club) %>%
+  summarize(
+    seasons_n = n(),
+    season_first = first(season),
+    season_last = last(season)
+  ) %>%
+  arrange(desc(seasons_n))
 # only 2 clubs on first rank: Köln & Bay. München (from 1980-81 onwards)
+
+# runner-up
+bl_cumul_ordered %>%
+  filter(order == 2) %>%
+  group_by(club) %>%
+  summarize(
+    seasons_n = n(),
+    season_first = first(season),
+    season_last = last(season)
+  ) %>%
+  arrange(desc(seasons_n))
+
+# top 3
+bl_cumul_ordered %>%
+  filter(order <= 3) %>%
+  group_by(club) %>%
+  summarize(
+    seasons_n = n(),
+    season_first = first(season),
+    season_last = last(season)
+  ) %>%
+  arrange(desc(seasons_n))
+
 
 bl_cumul_ordered %>%
   filter(points_cumul > 0) %>%
