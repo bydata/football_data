@@ -117,10 +117,10 @@ p <- bl_cumul_ordered %>%
 p
 
 # frames per second
-fps <- 20
+fps <- 12
 
 anim <- p + transition_states(season, wrap = FALSE)  + view_follow(fixed_y = TRUE)
-animate(anim, nframes = 15 * seasons_n, fps = fps, width = 1000, height = 800, end_pause = 5 * fps)
+animate(anim, nframes = 15 * seasons_n, fps = fps, width = 800, height = 600, end_pause = 5 * fps)
 #animate(anim, nframes = 50, fps = 3, width = 1000, height = 800)
 anim_save("ewige_tabelle.gif")  
 
