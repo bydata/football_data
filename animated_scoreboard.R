@@ -1,6 +1,6 @@
 library(tidyverse)
+#devtools::install_github('thomasp85/gganimate') # install from github due to https://github.com/thomasp85/gganimate/issues/316
 library(gganimate)
-library(parallel)
 library(ggthemes)
 
 source("scraping.R")
@@ -116,14 +116,17 @@ p <- bl_cumul_ordered %>%
   scale_fill_manual(values = club_colors)
 p
 
-# frames per second
+# save gif
 fps <- 12
-
 anim <- p + transition_states(season, wrap = FALSE)  + view_follow(fixed_y = TRUE)
-animate(anim, nframes = 15 * seasons_n, fps = fps, width = 800, height = 600, end_pause = 5 * fps)
+animate(anim, nframes = 8 * seasons_n, fps = fps, width = 800, height = 600, end_pause = 4 * fps)
 #animate(anim, nframes = 50, fps = 3, width = 1000, height = 800)
 anim_save("ewige_tabelle.gif")  
 
+# as a video file
+fps <- 25
+animate(anim, nframes = ceiling(fps / 2 * seasons_n), fps = fps, width = 800, height = 600, end_pause = 4 * fps, renderer = av_renderer())
+anim_save("ewige_tabelle.mp4")
 
 bl_cumul_ordered %>%
   filter(order == 1) %>%
