@@ -109,6 +109,8 @@ p <- bl_cumul_ordered %>%
     panel.grid = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
     panel.border = element_blank(),
     plot.title = element_text(size = 25, face = "bold"),
     plot.subtitle = element_text(size = 15, hjust = 0)
