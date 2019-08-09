@@ -1,0 +1,6 @@
+1989-90: 1st round match Osnabrück vs. Schalke ended 3:1 in extra time (Osnabrück won, cf. https://de.wikipedia.org/wiki/DFB-Pokal_1989/90#Wiederholungsspiele). kicker.de reports 1:1 erronously. But since both teams were in 2. Bundesliga and it's Schalke, we ignore it.
+1993-94: 1st round match Offenbach vs. Meppen was decided in extra time (Offenbach won). kicker.de reports 2:2 after regulation. Ignore it for now.
+2003-04: 1st round match Siegen vs. LR Ahlen was decided in court. Match removed from dataset.
+2013-14: Only 17 teams from 2. Bundesliga. Dynamo Dresden was banned from cup.
+
+
