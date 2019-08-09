@@ -1,7 +1,7 @@
 library(tidyverse)
 library(rvest)
 library(parallel)
-
+library(ggthemes)
 
 
 # retrieve page content - takes either a URL string or a vector of strings which constitute a url (will be collapsed to one string using "/")
@@ -22,20 +22,27 @@ get_content <- function(url) {
 #https://www.fussballdaten.de/vereine/borussia-dortmund/1995/kader/
 
 scrape_fussballdaten_squad <- function(team, league, year = 2019) {
-  #message(str_c("* ", team))
+  # team <- "borussia-dortmund"
+  # league <- "bundesliga"
+  # year <- 2019
   request_url <- str_c("https://www.fussballdaten.de/vereine", team, year, "kader", sep = "/")
-  raw_table <- get_content(request_url) %>% html_node(css = "table.kader")
+  raw_table <- get_content(request_url) %>% html_node(css = "table.verein-kader")
   
   # parse table
-  t <- raw_table %>% html_table(fill = TRUE) %>%
-    rename(name = Name, position = Position, shirt_number = Nr, age = Alter, 
-          height = `Größe`, matches = Spiele, goals = Tore, assists = `Vorl.`) %>%
-    select(-`Nat.`, -assists) %>% #assists columns is empty %>%
-    select(name, everything())
+  t <- raw_table %>% html_table(fill = TRUE) 
+  colnames(t) <- c("jersey", "name", "X1", "position", "age", "height", "weight", "games",
+                   "goals", "assists", "own_goals", "booked", "sent_off_yellow", "sent_off_red", 
+                   "subbed_in", "subbed_out", "minutes", "rating", "X2", "X3") 
+  t <- t %>% select(-X1, -X2, -X3)  # country is empty
+  t <- t %>% filter(!str_detect(jersey, "Spieler:"))
   
   # get nationality from flags (looks a bit overcomplicated but we need to catch edge cases with missing <b> elements containing the flag)
-  flag_cells <- html_nodes(raw_table, xpath = "//tr[*]/td[9]")
-  flags <- map(flag_cells, ~ html_node(.x, css = "b.flag-icon") %>% html_attr("title")) %>% unlist()
+  flag_cells <- html_nodes(raw_table, xpath = "//tr[*]/td[3]")
+  flags <- map(flag_cells, ~ html_node(.x, css = "span.flag-icon") %>% html_attr("title")) %>% unlist()
+  # be careful, the vector contains the nationalities of the coaching staff as well, first line is empty
+  players_n <- nrow(t)
+  flags <- flags[2:(players_n+1)]
+  
 
   # convert strings to integers
   convert_str2int <- function(s) {
@@ -49,12 +56,15 @@ scrape_fussballdaten_squad <- function(team, league, year = 2019) {
   # merge
   squad <- cbind(league, year, team, t, flags) %>%
     rename(flag = flags) %>%
-    mutate(shirt_number = as.numeric(shirt_number),
-           age = as.numeric(age),
-           matches = convert_str2int(matches),
+    mutate(jersey = as.numeric(jersey),
+           #age = as.numeric(age),
+           games = convert_str2int(games),
            goals = convert_str2int(goals),
            #assists = convert_str2int(assists),
-           height = as.numeric(str_replace(height, ",", "."))
+           height = as.numeric(str_replace(height, ",", ".")),
+           weight = as.numeric(str_replace(weight, ",", ".")),
+           rating = convert_str2int(rating),
+           rating = ifelse(rating == 0, NA, rating)
            )
   squad
 } 
@@ -100,6 +110,13 @@ scrape_fussballdaten_squads_parallel <- function(leagues) {
 }
 
 
+
+teams1 <- scrape_fussballdaten_teams("bundesliga") 
+teams1
+league1 <- scrape_fussballdaten_squad("borussia-dortmund", "bundesliga")
+
+
+# run queries for selected leagues
 system.time( {
   no_cores <- detectCores() - 1
   cl <- makeCluster(no_cores)
@@ -117,6 +134,7 @@ system.time( {
   cl <- NULL
 })
 
+# format player data
 players <- data.table::rbindlist(flatten(flatten(result))) %>%
   mutate(league = as.character(league),
          team = as.character(team),
@@ -151,31 +169,31 @@ scrape_uefa_coefficients <- function(year) {
   t
 }
 
-coefficients_tbl <- map_dfr(c(1999:2003, 2005:2019), scrape_uefa_coefficients) %>% # 2004 data is missing on the UEFA website
+coefficients_tbl <- map_dfr(c(1997:2003, 2005:2019), scrape_uefa_coefficients) %>% # 2004 data is missing on the UEFA website
   as_tibble()
 
 
 ## EXPLORATION: players
 
-countries <- players %>% distinct(country)
+countries <- players %>% count(country)
 countries
 
 players %>% 
   group_by(league) %>%
-  summarize(shirt_mean = mean(shirt_number, na.rm = TRUE),
-            shirt_sd = sd(shirt_number, na.rm = TRUE)
+  summarize(jersey_mean = mean(jersey, na.rm = TRUE),
+            jersey_sd = sd(jersey, na.rm = TRUE)
   ) %>%
-  arrange(desc(shirt_mean))
+  arrange(desc(jersey_mean))
 
 # missing shirt numbers
 players %>%
-  filter(is.na(shirt_number)) %>%
+  filter(is.na(jersey)) %>%
   count(country) %>%
   arrange(desc(n))
 
 # missing shirt numbers but matches played
 players %>%
-  filter(is.na(shirt_number), matches > 0) %>%
+  filter(is.na(jersey), games > 0) %>%
   count(country) %>%
   arrange(desc(n))
 
@@ -187,8 +205,8 @@ players %>%
   arrange(desc(med_players_team))
 
 # keep only players with a non-missing shirt number
-players <- players %>%
-  filter(!is.na(shirt_number))
+players_cleaned <- players %>%
+  filter(!is.na(jersey))
 
 
 # number of matches per player and country
@@ -225,7 +243,126 @@ coefficients_tbl %>%
 ggplot(aes(year, coefficient_z, col = country)) +
   geom_line() +
   coord_cartesian(ylim = c(0, max(coefficients_tbl$coefficient_z) + 1)) + 
-  ggthemes::theme_fivethirtyeight()
+  theme_hc() + scale_color_hc()
+
+
+#devtools::install_github("thomasp85/gganimate")
+library(gganimate)
+
+coefficients_ordered <- coefficients_tbl %>%
+  mutate(country = ifelse(country == "Tschechische Rep.", "Tschechien", country)) %>%
+  group_by(year) %>%
+  mutate(rank_no = rank(-coefficient, ties = "first")) %>%
+  ungroup() %>%
+  arrange(year, rank_no) %>%
+  select(year, rank_no, country, everything())
+
+# how many countries to display on chart
+display_countries_n <- 10
+
+# country colours
+countries <- coefficients_ordered %>% distinct(country) %>% arrange(country) %>% pull(country)
+(countries_n <- length(countries))
+
+# English translations
+
+
+countries_en <- c(
+  "Albania", "Andorra", "Armenia", "Azerbaidzhan", "Belarus",
+  "Belgium", "Bosnia-Herzegovina", "Bulgaria", "Denmark", "Germany",
+  "England", "Estonia", "Färöer", "Finland", "France",
+  "Georgia", "Gibraltar", "Greece", "Iceland", "Israel",
+  "Italy", "Kazakstan", "Kosovo", "Croatia", "Latvia", 
+  "Liechtenstein", "Lithania", "Luxembourg", "Malta", "Moldavia", 
+  "Montenegro", "Netherlands", "Northern_Ireland", "North_Mazedonia", "Norway",
+  "Austria", "Poland", "Portugal", "Ireland", "Romania", 
+  "Russia", "San Marino", "Scotland", "Sweden", "Switzerland",
+  "Serbia", "Slovakia", "Slovenia", "Spain", "Czech_Republic",
+  "Turkey", "Ukraine", "Hungary", "Wales", "Cyprus"
+)
+
+country_translations <- bind_cols(country_de = countries, country_en = countries_en)
+
+coefficients_ordered <- 
+  coefficients_ordered %>%
+  left_join(country_translations, by = c("country" = "country_de"))
+
+country_colors = c(
+  rep("#999999", countries_n)
+)
+names(country_colors) <- countries
+country_colors
+
+country_colors["Deutschland"] <- "black"
+country_colors["Spanien"] <- "yellow"
+country_colors["England"] <- "red"
+country_colors["Frankreich"] <- "blue"
+country_colors["Italien"] <- "green"
+country_colors["Belgien"] <- "#555555"
+#country_colors[""] <- ""
+
+
+# flags
+#img_germany <- readPNG(system.file("flags", "germany.png", package="png"))
+# img_germany <- readPNG("flags/germany.png")
+# flag_germany <- rasterGrob(img_germany, interpolate=TRUE)
+
+
+coefficients_ordered_2003 <- coefficients_ordered %>%
+  filter(year == 2003)
+
+# fake it
+coefficients_ordered_2004 <- coefficients_ordered_2003 %>%
+  mutate(year = 2004)
+
+coefficients_ordered_fixed <- coefficients_ordered %>%
+  bind_rows(coefficients_ordered_2004)
+  
+
+# create graph
+p <- coefficients_ordered_fixed %>%
+  filter(rank_no <= display_countries_n) %>%
+  ggplot(aes(rank_no, group = country_en, fill = country_en)) +
+  geom_tile(aes(y = coefficient/2, height = coefficient), 
+            width = 0.8, color = NA, alpha = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = str_c("  ", country_en)), y = 1, size = 5, vjust = 0.5, hjust = 0, parse = TRUE) +
+  geom_text(aes(label = sprintf("%.2f", coefficient), x = rank_no, y = coefficient + 3), vjust = 0) +
+  coord_flip(clip = "off") +
+  scale_x_reverse(breaks = coefficients_ordered_fixed$rank_no) +
+  labs(
+    title = "UEFA Coefficients Ranking", 
+    subtitle = paste("Top", display_countries_n, "Leagues", "({closest_state})"), 
+    caption = "Source: UEFA.com",
+    y = NULL, x = NULL
+  ) +
+  scale_fill_viridis_d(option = "D") +
+  guides(fill = NULL) +
+  theme_hc() + 
+  theme(
+    axis.text = element_blank(), 
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    panel.border = element_blank(),
+    #plot.margin = unit(c(0.5, 0.5, 0.5, 2), "cm"),
+    plot.title = element_text(size = 25, face = "bold"),
+    plot.subtitle = element_text(size = 15, hjust = 0)
+  )
+
+# animation
+fps <- 12
+years_n <- (2019 - 1997 - 1)
+anim <- p + transition_states(year, wrap = FALSE) + ease_aes("linear") 
+animate(anim, nframes = years_n * fps, fps = fps, width = 800, height = 600, end_pause = 4 * fps, renderer = av_renderer())
+anim_save("uefa_coefficients.mp4")
+
+
+
+
+
 
 # biggest improvements in (scaled) ratings
 coefficients_tbl %>%

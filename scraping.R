@@ -140,13 +140,6 @@ scrape_league_table <- function(league, year) {
   )
 }
 
-# helper function to call scrape_league_table within parLapply
-# scrape_league_table_parallel <- function(args) {
-#   if (typeof(args) != "list" || is.null(args[["league"]]) || is.null(args[["year"]])) {
-#     return(NULL)
-#   } 
-#   scrape_league_table(args[["league"]], args[["year"]]) 
-# }
 
 scrape_season_results <- function(league, year, exclude.na = TRUE) {
   # 2. Bundesliga not supported by now
