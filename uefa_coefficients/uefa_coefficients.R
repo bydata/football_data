@@ -174,6 +174,7 @@ p3 <- coefficients_tbl %>%
   scale_color_viridis_d(option = "D") +
   scale_fill_viridis_d(option = "D") +
   scale_x_reverse(limits = c(25, 1), breaks = seq(1, 25, 1)) +
+  scale_y_continuous(breaks = seq(0, 125, 25)) +
   labs(
     title = "UEFA Ranking and UEFA Coefficients",
     subtitle = "(Year {closest_state})",
@@ -184,11 +185,8 @@ p3 <- coefficients_tbl %>%
   theme_hc() + 
   theme(
     text = element_text(family = "Nunito Sans"),
-    #axis.text.y = element_blank(), 
     axis.ticks = element_blank(),
-    #panel.grid = element_blank(),
     panel.grid.major.x = element_line(color = "#DDDDDD"),
-    #panel.grid.minor.x = element_line(color = "#DDDDDD"),
     panel.grid.major.y = element_blank(),
     panel.grid.minor.y = element_blank(),
     panel.border = element_blank(),
@@ -196,12 +194,11 @@ p3 <- coefficients_tbl %>%
     plot.title = element_text(size = 25, face = "bold"),
     plot.subtitle = element_text(size = 15, hjust = 0)
   )
-
 p3
 
 anim3 <- p3 + transition_states(year, wrap = FALSE) + ease_aes("cubic-in-out") 
 animate(anim3, nframes = 240, width = 800, height = 600, renderer = av_renderer())
-anim_save("uefa_coefficients_ranks.mp4")
+anim_save("output/uefa_coefficients_ranks.mp4")
 animate(anim3, nframes = 240, width = 800, height = 600)
-anim_save("uefa_coefficients_ranks.gif")
+anim_save("output/uefa_coefficients_ranks.gif")
 

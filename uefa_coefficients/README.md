@@ -14,6 +14,7 @@ Rankings and coefficients over time
 Animated graphs were created using `gganimate`.
 
 Limited to countries which ever made it to the annual top 5 in order to
-reduce the number of items displayed on the chart.
+reduce the number of items displayed on the chart. Before 1990, West
+German Bundesliga is labelled Germany.
 
-![](uefa_coefficients_ranks.gif)
+![](output/uefa_coefficients_ranks.gif)
