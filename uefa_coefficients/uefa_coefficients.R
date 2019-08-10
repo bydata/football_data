@@ -89,7 +89,7 @@ windowsFonts()
 display_countries_n <- 10
 
 # create graph
-p <- coefficients_tbl %>%
+p1 <- coefficients_tbl %>%
   filter(rank_no <= display_countries_n) %>%
   ggplot(aes(rank_no, group = country, fill = country)) +
   geom_tile(aes(y = coefficient/2, height = coefficient), 
@@ -123,11 +123,11 @@ p <- coefficients_tbl %>%
   )
 
 # animation
-fps <- 4
-years_n <- (2019 - 1960)
-anim <- p + transition_states(year, wrap = FALSE) + ease_aes("linear") 
-animate(anim, nframes = years_n * fps, fps = fps, width = 800, height = 600, end_pause = 4 * fps, renderer = av_renderer())
-anim_save("uefa_coefficients_top10.mp4")
+anim1 <- p1 + transition_states(year, wrap = FALSE) + ease_aes("cubic-in-out") 
+animate(anim1, nframes = 320, width = 800, height = 600, renderer = av_renderer())
+anim_save("output/uefa_coefficients_top10.mp4")
+animate(anim1, nframes = 320, width = 800, height = 600)
+anim_save("output/uefa_coefficients_top10.gif")
 
 
 # coefficients over time

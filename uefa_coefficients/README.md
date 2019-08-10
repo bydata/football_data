@@ -8,8 +8,10 @@ Country rankings and coefficients were scraped from
 <a href="https://kassiesa.home.xs4all.nl/bert/uefa/data/index.html" class="uri">https://kassiesa.home.xs4all.nl/bert/uefa/data/index.html</a>
 using the `rvest` package.
 
-Rankings and coefficients over time
------------------------------------
+Animations
+----------
+
+### Rankings and coefficients over time
 
 Animated graphs were created using `gganimate`.
 
@@ -18,3 +20,7 @@ reduce the number of items displayed on the chart. Before 1990, West
 German Bundesliga is labelled Germany.
 
 ![](output/uefa_coefficients_ranks.gif)
+
+### Top 10 from 1960 to 2019
+
+![](output/uefa_coefficients_top10.gif)
