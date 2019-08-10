@@ -10,11 +10,9 @@ autosize: true
 
 ## Data source
 
-Country rankings and coefficients were scraped from https://kassiesa.home.xs4all.nl/bert/uefa/data/index.html using the ``rvest`` package.
+Country rankings and coefficients were scraped from https://kassiesa.home.xs4all.nl/bert/uefa/data/index.html using the ``rvest`` package. The website provides datasets of UEFA country coefficients from 1960 to today. Note there were multiple changes to the calculation of the coefficients.
 
 ## Animations
-
-### Rankings and coefficients over time
 
 Animated graphs were created using ``gganimate``.
 
@@ -22,8 +20,6 @@ Limited to countries which ever made it to the annual top 5 in order to reduce t
 
 ![](output/uefa_coefficients_ranks.gif)
 
-
-### Top 10 from 1960 to 2019
 
 ![](output/uefa_coefficients_top10.gif)
 
