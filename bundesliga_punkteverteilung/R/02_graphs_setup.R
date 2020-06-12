@@ -14,7 +14,7 @@ custom_theme <- theme_minimal() + theme(
   text = element_text(color = "grey35", size = 9, family = "CenturyGothic"),
   plot.title = element_text(size = 14, margin = margin(t = 15, b = 10), family = "Georgia"),
   plot.subtitle = element_text(size = 11, margin = margin(b = 12)),
-  plot.caption = element_text(size = 8, margin = margin(t = 8)),
+  plot.caption = element_text(size = 7, margin = margin(t = 8)),
   strip.text = element_text(size = 9, margin = margin(t = 10, b = 4, l = 4, r = 4)),
   axis.text = element_text(family = "CenturyGothic"),
   panel.grid = element_line(color = "grey98", size = 0.5),
