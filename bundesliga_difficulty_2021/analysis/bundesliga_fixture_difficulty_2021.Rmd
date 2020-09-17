@@ -1,6 +1,6 @@
 ---
 title: "Bundesliga fixture difficulty 2020/'21"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
