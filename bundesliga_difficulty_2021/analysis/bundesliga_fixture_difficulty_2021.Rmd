@@ -1,6 +1,9 @@
 ---
 title: "Bundesliga fixture difficulty 2020/'21"
-output: html_document
+output: 
+  html_document:
+    bootstrap_version: 4+3
+    theme: spacelab
 ---
 
 ```{r setup, include=FALSE}
