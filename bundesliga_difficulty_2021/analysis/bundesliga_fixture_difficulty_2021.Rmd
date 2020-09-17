@@ -65,6 +65,7 @@ knitr::include_graphics("../plots/bundesliga_fixture_difficulty_first6fixtures.p
 * Bielefeld is looking ahead to a hard season start with no matchups against other bottom tier teams and 3 fixtures against teams from the top 6 of the league.
 * Werder Bremen might be quite lucky with their fixtures.
 * Schalke will match up with 3 top tier teams in their first 6 matches. Except some Schalke doing Schalke things.
+* Union Berlin will face a challenging season finale - 5 of their last 7 opponents are from the top tier.
 
 ## Code
 
