@@ -33,9 +33,10 @@ To re-create the fixture difficulty schedule for the Bundesliga season, I used `
 **Amendments to original chart:**
 
 * Home / away games highlighted with filled / hollow shapes instead of bold / plain print
-* Used a bit of spacing to separate months visually.
+* Used a bit of spacing to separate months visually
 * Club emblems instead of text labels
 * Colors explained in the subtitle, getting rid of the extra legend
+* Added a light background color to the plot
 
 [![Bundesliga fixture difficulty schedule](../plots/bundesliga_fixture_difficulty.png)](../plots/bundesliga_fixture_difficulty.png)
 (Click image for a larger resolution)

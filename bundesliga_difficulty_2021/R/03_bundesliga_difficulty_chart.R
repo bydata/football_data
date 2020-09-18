@@ -124,7 +124,7 @@ theme_custom <- function() {
       legend.position = "top",
       legend.justification = "left",
       panel.grid = element_blank(),
-      plot.margin = margin(l = 12, r = 12, b = 10),
+      plot.margin = margin(l = 12, r = 12, b = 6),
       plot.title.position = "plot"
     )
 }
