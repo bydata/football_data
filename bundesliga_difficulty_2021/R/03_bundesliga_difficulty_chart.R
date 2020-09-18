@@ -102,7 +102,10 @@ geom_text_font_size <- 3
 # custom ggplot2 theme
 theme_custom <- function() {
   theme_minimal(base_family = base_font_family) +
-    theme(
+    theme( 
+      plot.background = element_rect(fill = "#fffffb",
+                                     color = "#dbdbd3",
+                                     size = 0.5), #fafaf2
       plot.title = element_text(
         family = "Source Serif Pro SemiBold",
         face = "bold",
