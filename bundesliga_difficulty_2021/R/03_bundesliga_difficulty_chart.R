@@ -3,28 +3,6 @@ library(ggtext)
 library(lubridate)
 library(glue)
 
-# # Source: bwin.de and tipico.de (2020-08-22)
-# odds <- tribble(
-#   ~team, ~bwin, ~tipico,
-#   "Bayern München", 1.15, 1.2,
-#   "Borussia Dortmund", 6.5, 6.5, 
-#   "RB Leipzig", 15.0, 20.0,
-#   "Borussia Mönchengladbach", 51.0, 50.0,
-#   "Bayer 04 Leverkusen", 67.0, 50.0,
-#   "FC Schalke 04", 201.0, 600.0,
-#   "Eintracht Frankfurt", 201.0, 300.0,
-#   "VfL Wolfsburg", 201.0, 150.0,
-#   "Hertha BSC", 201.0, 200.0,
-#   "TSG Hoffenheim", 501.0, 200.0,
-#   "Werder Bremen", 1001.0, 750.0,
-#   "1. FC Köln", 1001.0, 600.0,
-#   "1. FSV Mainz 05", 1001.0, 1250.0,
-#   "SC Freiburg", 1001.0, 1000.0,
-#   "FC Augsburg", 1001.0, 1250.0,
-#   "VfB Stuttgart", 1001.0, 750.0,
-#   "1. FC Union Berlin", 2001.0, 1500.0,
-#   "Arminia Bielefeld", 2001.0, 2000.0
-# )
 
 # Source: bwin.de and tipico.de (2020-09-17)
 odds <- tribble(
@@ -50,7 +28,6 @@ odds <- tribble(
 )
 
 
-
 # read fixtures (scraped with 01_scrape_bundesliga_fixtures.R)
 fixtures <- read_rds("output/bundesliga_fixtures.RData")
 
@@ -68,7 +45,6 @@ odds <- odds %>%
   mutate(odds_gmean = sqrt(bwin * tipico)) %>% 
   mutate(rank = rank(odds_gmean, ties.method = "first"))
   
-
 # create a key for each fixture
 fixtures <- fixtures %>% 
   mutate(id = row_number())
@@ -96,13 +72,15 @@ fixtures_odds <-
   select(-ends_with(".against"), team.against, rank.against, odds_gmean.against, odds_rank_grp.against)
 
 
-## get club icons (downloaded using xx_download_club_icons.R)
+# get club icons (downloaded using 02_download_club_icons.R)
 icons_dir <- "input/team_icons/"
 icon_files <- list.files(icons_dir, pattern = "*.png")
 names(icon_files) <- odds$team
+
 # reorder by odds rank
 icon_files <- icon_files[order(odds$rank)]
 
+# surround icons with HTML <img> tags
 icon_labels <- sprintf("<img src='%s%s' width='18'>&nbsp;%s", 
                        icons_dir, rev(icon_files),
                        str_pad(18:1, width = 2, side = "left", pad = " "))
@@ -115,16 +93,40 @@ windowsFonts(`Open Sans` = windowsFont("Open Sans"))
 tier_shape_colors <- c("#DA4D63", "#DCDCDC", "#1D7FB8")
 tier_font_colors <- matrix(c("white", "grey10", "white", tier_shape_colors[1], "grey40", tier_shape_colors[3]), ncol = 3, byrow = TRUE)
 
-# y position for lines separating teams
-lines_y <- 1:17 + 0.5
 
 # font size for text geoms
 geom_text_font_size <- 3
 
 # custom ggplot2 theme
+theme_custom <- function() {
+  theme_minimal(base_family = "Open Sans") +
+    theme(
+      plot.title = element_text(
+        family = "DM Serif Display",
+        face = "bold",
+        size = 24,
+        margin = margin(t = 16, b = 10)
+      ),
+      plot.subtitle = element_markdown(size = 11,
+                                       margin = margin(b = 16),
+                                       lineheight = 1.2),
+      plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
+      text = element_text(color = "grey20"),
+      axis.ticks.x = element_blank(),
+      legend.position = "top",
+      legend.justification = "left",
+      panel.grid = element_blank(),
+      plot.margin = margin(l = 12, r = 12, b = 10)
+    )
+}
+theme_set(theme_custom())
+
 
 
 ## Recreate difficulty schedule -----------------------------------
+
+# y position for lines separating teams
+lines_y <- 1:17 + 0.5
 
 # subtitle
 plot_subtitle <- sprintf("Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
@@ -197,32 +199,15 @@ p <- p +
        x = NULL, shape = "Ground", col = "Opponent's strength")
 
 # custom theme adjustments
-p <- p + theme_minimal(base_family = "Open Sans") +
-  theme(
-    plot.title = element_text(
-      family = "DM Serif Display",
-      face = "bold",
-      size = 24,
-      margin = margin(t = 16, b = 10)
-    ),
-    plot.subtitle = element_markdown(size = 11,
-                                     margin = margin(b = 16),
-                                     lineheight = 1.2),
-    plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
-    text = element_text(color = "grey20"),
+p <- p + theme(
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.text.y = element_markdown(hjust = 0, vjust = 0.5, size = 6),
     strip.placement = "outside",
     strip.text = element_text(vjust = 1, margin = margin(t = 0), size = 10, color = "grey40"),
     panel.spacing = unit(0, "mm"),
-    legend.position = "top",
-    legend.justification = "left",
-    panel.grid = element_blank(),
-    plot.margin = margin(l = 12, r = 12, b = 10)
   )
 
-x11(width = 11, height = 8.5)
 p
 
 #ggsave("plots/bundesliga_fixture_difficulty.png", type = "cairo", dpi = 320, width = 11, height = 8.5)
@@ -230,7 +215,7 @@ ggsave("plots/bundesliga_fixture_difficulty.png", type = "cairo", dpi = 320,
        width = 6, height = 5, scale = 1.5)
 
 
-## Subplot per team ----------------------
+## Subplot per team --------------------------------------------
 
 
 # labels for facet headers
@@ -278,19 +263,7 @@ p <- p +
   caption = plot_caption
 )
   
-p <- p +
-  theme_minimal() +
-  theme(plot.title = element_text(
-    family = "DM Serif Display",
-    face = "bold",
-    size = 24,
-    margin = margin(t = 16, b = 10)
-  ),
-  plot.subtitle = element_markdown(size = 11,
-                                   margin = margin(b = 16),
-                                   lineheight = 1.2),
-  plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
-  text = element_text(color = "grey20"),
+p <- p + theme(
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(),
@@ -298,10 +271,7 @@ p <- p +
         panel.grid = element_blank(),
         strip.text = element_markdown(margin = margin(t = 16, b = 8)),
         panel.spacing.x = unit(8, "mm"),
-        plot.margin = margin(l = 12, r = 12)
   )
-
-x11(width = 10, height = 6.7)
 p
 
 #ggsave("plots/bundesliga_fixture_difficulty_by_team.png", type = "cairo", dpi = 320, width = 10, height = 6.7)
@@ -363,19 +333,8 @@ p <- p +
     caption = plot_caption
   )
 
-p <- p +
-  theme_minimal(base_family = "Open Sans") +
-  theme(plot.title = element_text(
-    family = "DM Serif Display",
-    face = "bold",
-    size = 24,
-    margin = margin(t = 16, b = 10)
-  ),
-  plot.subtitle = element_markdown(size = 11,
-                                   margin = margin(b = 16),
-                                   lineheight = 1.2, color = "grey25"),
-  plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
-  text = element_text(color = "grey25"),
+# theme adjustments
+p <- p + theme(
   axis.title.x = element_blank(),
   axis.title.y = element_blank(),
   axis.text.x = element_blank(),
@@ -383,10 +342,8 @@ p <- p +
   panel.grid = element_blank(),
   strip.text = element_markdown(margin = margin(t = 16, b = 8)),
   panel.spacing.x = unit(8, "mm"),
-  plot.margin = margin(l = 12, r = 12)
   )
 
-x11(width = 10, height = 6.7)
 p
 
 ggsave("plots/bundesliga_fixture_difficulty_by_team_lollipop.png", type = "cairo", dpi = 320, width = 8, height = 5.3, scale = 1.3)
@@ -444,33 +401,16 @@ p <- p +
        fill = "Opponent's implied strength")
 
 # custom theme adjustments
-p <- p + theme_minimal(base_family = "Open Sans") +
-  theme(
-    plot.title = element_text(
-      family = "DM Serif Display",
-      face = "bold",
-      size = 24,
-      margin = margin(t = 16, b = 10)
-    ),
-    plot.subtitle = element_markdown(size = 11,
-                                     margin = margin(b = 16),
-                                     lineheight = 1.2),
-    plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
-    text = element_text(color = "grey20"),
+p <- p + theme(
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.text.y = element_markdown(hjust = 0, vjust = 0.5, size = 6),
     strip.placement = "outside",
     strip.text = element_text(vjust = 1, margin = margin(t = 0), size = 10, color = "grey40"),
     panel.spacing = unit(0, "mm"),
-    legend.position = "top",
-    legend.justification = "left",
-    legend.key.height = unit(2.5, "mm"),
-    panel.grid = element_blank(),
-    plot.margin = margin(l = 12, r = 12, b = 10)
+    legend.key.height = unit(2.5, "mm")
   )
 
-x11(width = 11, height = 8.5)
 p
 
 ggsave("plots/bundesliga_fixture_difficulty_heatmap.png", type = "cairo", dpi = 320, width = 11, height = 8.5)
@@ -479,7 +419,6 @@ ggsave("plots/bundesliga_fixture_difficulty_heatmap.png", type = "cairo", dpi = 
 
 
 ## Season start difficulty as stacked bar chart ---------------------------------------
-
 
 # subtitle
 plot_subtitle <- sprintf("Opponent's implied strength in the first 6 fixtures for each Bundesliga team.<br>
@@ -511,30 +450,15 @@ p <- p +
        subtitle = plot_subtitle,
        caption = plot_caption)
 
-p <- p +
-  theme_minimal(base_family = "Open Sans") +
-  theme(plot.title = element_text(
-    family = "DM Serif Display",
-    face = "bold",
-    size = 24,
-    margin = margin(t = 16, b = 10)
-  ),
-  plot.subtitle = element_markdown(size = 11,
-                                   margin = margin(b = 16),
-                                   lineheight = 1.2, color = "grey25"),
-  plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
-  text = element_text(color = "grey25"),
+p <- p + theme(
   axis.title.x = element_blank(),
   axis.title.y = element_blank(),
   axis.text.x = element_blank(),
   axis.text.y = element_markdown(),
-  panel.grid = element_blank(),
   strip.text = element_markdown(margin = margin(t = 16, b = 8)),
   panel.spacing.x = unit(8, "mm"),
-  plot.margin = margin(l = 12, r = 12)
   )
 
-x11(width = 6.5, height = 8)
 p
 
 ggsave("plots/bundesliga_fixture_difficulty_first6fixtures.png", type = "cairo", dpi = 320, 
