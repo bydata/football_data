@@ -223,77 +223,8 @@ ggsave("plots/bundesliga_fixture_difficulty.png", type = "cairo", dpi = 320,
        width = 6, height = 5, scale = 1.4)
 
 
-## Subplot per team --------------------------------------------
 
-# subtitle
-plot_subtitle <- sprintf("Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
-                          <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier. 
-                         Filled shapes denote home matches.", 
-                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
-
-# labels for facet headers
-facet_header_labels <- sprintf("<img src='%s%s' width=20>", 
-                       icons_dir, icon_files)  # reminder: already reordered
-names(facet_header_labels) <- odds$team[order(odds$rank)]
-# turn into tibble
-facet_header_labels_tbl <- as_tibble(facet_header_labels, rownames = "team") %>% 
-  rename(facet_label = value)
-
-# subtitle
-plot_subtitle <- sprintf("Each bar indicates a matchday. Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
-                          <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier.<br>
-                         Only the first half of the campaign is displayed.", 
-                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
-
-# draw plot
-p <- fixtures_odds %>% 
-  inner_join(facet_header_labels_tbl, by = "team") %>% 
-  # only show the order of teams' opponents and exclude second round
-  filter(matchday <= 17) %>% 
-  mutate(
-    # reorder team by odds rank
-    facet_label = fct_reorder(facet_label, rank),
-    # center opponents rank around avg rank (10)
-    rank_centered.against = 10 - rank.against
-    ) %>%
-  ggplot(aes(matchday, rank_centered.against))
-
-p <- p +
-  geom_col(aes(fill = odds_rank_grp.against),
-           width = 0.6, show.legend = FALSE) 
-
-p <- p +
-  scale_fill_manual(values = tier_shape_colors) +
-  scale_color_manual(values = tier_shape_colors)
-
-p <- p +
-  facet_wrap(vars(facet_label), ncol = 6)
-
-p <- p + 
-  labs(
-  title = "Bundesliga fixture difficulty 2020/'21 by team",
-  subtitle = plot_subtitle,
-  caption = plot_caption
-)
-  
-p <- p + theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        panel.grid = element_blank(),
-        strip.text = element_markdown(margin = margin(t = 16, b = 8)),
-        panel.spacing.x = unit(8, "mm"),
-  )
-p
-
-#ggsave("plots/bundesliga_fixture_difficulty_by_team.png", type = "cairo", dpi = 320, width = 10, height = 6.7)
-ggsave("plots/bundesliga_fixture_difficulty_by_team.png", type = "cairo", 
-       dpi = 320, width = 6, height = 4, scale = 1.8)
-
-
-
-## Subplot per team (but with lollipops) ----------------------
+## Subplot per team (with lollipops) ----------------------
 
 # subtitle
 plot_subtitle <- glue("Each lollipop indicates a matchday.<br>
@@ -360,7 +291,7 @@ p <- p + theme(
 p
 
 ggsave("plots/bundesliga_fixture_difficulty_by_team_lollipop.png", type = "cairo", 
-       dpi = 320, width = 8, height = 5.3, scale = 1.3)
+       dpi = 320, width = 8, height = 5.3, scale = 1.4)
 
 
 

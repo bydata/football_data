@@ -23,7 +23,7 @@ Implied strength was calculated on leading bookmakers' odds for winning the leag
 
 Bookmakers' odds for each team for winning the Bundesliga title were obtained from bwin.de and tipico.de (as of 17 September 2020). I calculated the geometric mean of the odds provided by the two bookmakers and ranked the teams according to their average odds of winning the title. Three tiers with 6 teams each were created based on these ranks.
 
-Bundesliga fixtures were [scraped from dfb.de](../R/01_scrape_bundesliga_fixtures.R) using the R package `rvest`.
+Bundesliga fixtures were [scraped from dfb.de](https://github.com/bydata/football_data/blob/master/bundesliga_difficulty_2021/R/01_scrape_bundesliga_fixtures.R) using the R package `rvest`.
 
 To re-create the fixture difficulty schedule for the Bundesliga season, I used `ggplot2` and the extension `ggtext` for `ggplot2`. `ggtext` allows for using HTML code within the plot (e.g. for the subtitle) and to include club emblems.
 
