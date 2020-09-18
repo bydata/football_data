@@ -135,7 +135,8 @@ theme_set(theme_custom())
 lines_y <- 1:17 + 0.5
 
 # subtitle
-plot_subtitle <- sprintf("Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
+plot_subtitle <- sprintf("Numbers show projected final position and can be used to identify opponents.<br>
+Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
                           <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier. 
                          Filled shapes denote home matches.", 
                          tier_shape_colors[1], "grey50", tier_shape_colors[3])
@@ -223,6 +224,11 @@ ggsave("plots/bundesliga_fixture_difficulty.png", type = "cairo", dpi = 320,
 
 ## Subplot per team --------------------------------------------
 
+# subtitle
+plot_subtitle <- sprintf("Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
+                          <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier. 
+                         Filled shapes denote home matches.", 
+                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
 
 # labels for facet headers
 facet_header_labels <- sprintf("<img src='%s%s' width=20>", 
