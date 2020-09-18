@@ -86,8 +86,10 @@ icon_labels <- sprintf("<img src='%s%s' width='18'>&nbsp;%s",
                        str_pad(18:1, width = 2, side = "left", pad = " "))
 
 # load fonts (download from Google Fonts)
-windowsFonts(`DM Serif Display` = windowsFont("DM Serif Display")) 
-windowsFonts(`Open Sans` = windowsFont("Open Sans"))
+library(extrafont)
+font_import(pattern = "Source|OpenSans", prompt = FALSE)
+loadfonts()
+base_font_family <- "Open Sans Light"
 
 # colors
 tier_shape_colors <- c("#DA4D63", "#DCDCDC", "#1D7FB8")
@@ -99,24 +101,28 @@ geom_text_font_size <- 3
 
 # custom ggplot2 theme
 theme_custom <- function() {
-  theme_minimal(base_family = "Open Sans") +
+  theme_minimal(base_family = base_font_family) +
     theme(
       plot.title = element_text(
-        family = "DM Serif Display",
+        family = "Source Serif Pro SemiBold",
         face = "bold",
         size = 24,
         margin = margin(t = 16, b = 10)
       ),
       plot.subtitle = element_markdown(size = 11,
+                                       family = "Open Sans",
                                        margin = margin(b = 16),
                                        lineheight = 1.2),
-      plot.caption = element_text(hjust = 0, margin = margin(t = 10, b = 6), color = "grey40", size = 9),
-      text = element_text(color = "grey20"),
+      plot.caption = element_text(hjust = 0, 
+                                  margin = margin(t = 10, b = 6), 
+                                  color = "grey35", size = 9),
+      text = element_text(color = "grey25"),
       axis.ticks.x = element_blank(),
       legend.position = "top",
       legend.justification = "left",
       panel.grid = element_blank(),
-      plot.margin = margin(l = 12, r = 12, b = 10)
+      plot.margin = margin(l = 12, r = 12, b = 10),
+      plot.title.position = "plot"
     )
 }
 theme_set(theme_custom())
@@ -132,7 +138,7 @@ lines_y <- 1:17 + 0.5
 plot_subtitle <- sprintf("Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
                           <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier. 
                          Filled shapes denote home matches.", 
-                         tier_shape_colors[1], tier_shape_colors[2], tier_shape_colors[3])
+                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
 
 # caption
 plot_caption <- "Opponent's implied strength: Teams have been ranked based on the pre-season odds of winning the Bundesliga title (as of 17 September 2020).
@@ -152,29 +158,29 @@ p <- p +
   geom_text(data = . %>% filter(odds_rank_grp.against == "Top" & home_away == "home"),
             aes(label = rank.against), 
             size = geom_text_font_size, hjust = "center", vjust = "center", 
-            col = tier_font_colors[1, 1], family = "Open Sans") +
+            col = tier_font_colors[1, 1], family = base_font_family) +
   geom_text(data = . %>% filter(odds_rank_grp.against == "Top" & home_away == "away"),
             aes(label = rank.against), 
             size = geom_text_font_size, hjust = "center", vjust = "center", 
-            col = tier_font_colors[2, 1], family = "Open Sans") +
+            col = tier_font_colors[2, 1], family = base_font_family) +
   # 2nd tier opponents
   geom_text(data = . %>% filter(odds_rank_grp.against == "Middle" & home_away == "home"),
             aes(label = rank.against), 
             size = geom_text_font_size, hjust = "center", vjust = "center", 
-            col = tier_font_colors[1, 2], family = "Open Sans") +
+            col = tier_font_colors[1, 2], family = base_font_family) +
   geom_text(data = . %>% filter(odds_rank_grp.against == "Middle" & home_away == "away"),
             aes(label = rank.against), 
             size = geom_text_font_size, hjust = "center", vjust = "center", 
-            col = tier_font_colors[2, 2], family = "Open Sans") +
+            col = tier_font_colors[2, 2], family = base_font_family) +
   # 3rd tier opponents
   geom_text(data = . %>% filter(odds_rank_grp.against == "Bottom" & home_away == "home"),
             aes(label = rank.against), 
             size = geom_text_font_size, hjust = "center", vjust = "center", 
-            col = tier_font_colors[1, 3], family = "Open Sans") +
+            col = tier_font_colors[1, 3], family = base_font_family) +
   geom_text(data = . %>% filter(odds_rank_grp.against == "Bottom" & home_away == "away"),
             aes(label = rank.against), 
             size = geom_text_font_size, hjust = "center", vjust = "center", 
-            col = tier_font_colors[2, 3], family = "Open Sans")
+            col = tier_font_colors[2, 3], family = base_font_family)
 
 p <- p +
   # draw lines to separate teams
@@ -212,7 +218,7 @@ p
 
 #ggsave("plots/bundesliga_fixture_difficulty.png", type = "cairo", dpi = 320, width = 11, height = 8.5)
 ggsave("plots/bundesliga_fixture_difficulty.png", type = "cairo", dpi = 320, 
-       width = 6, height = 5, scale = 1.5)
+       width = 6, height = 5, scale = 1.4)
 
 
 ## Subplot per team --------------------------------------------
@@ -230,7 +236,7 @@ facet_header_labels_tbl <- as_tibble(facet_header_labels, rownames = "team") %>%
 plot_subtitle <- sprintf("Each bar indicates a matchday. Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
                           <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier.<br>
                          Only the first half of the campaign is displayed.", 
-                         tier_shape_colors[1], tier_shape_colors[2], tier_shape_colors[3])
+                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
 
 # draw plot
 p <- fixtures_odds %>% 
@@ -276,7 +282,7 @@ p
 
 #ggsave("plots/bundesliga_fixture_difficulty_by_team.png", type = "cairo", dpi = 320, width = 10, height = 6.7)
 ggsave("plots/bundesliga_fixture_difficulty_by_team.png", type = "cairo", 
-       dpi = 320, width = 6, height = 4, scale = 2)
+       dpi = 320, width = 6, height = 4, scale = 1.8)
 
 
 
@@ -285,7 +291,7 @@ ggsave("plots/bundesliga_fixture_difficulty_by_team.png", type = "cairo",
 # subtitle
 plot_subtitle <- glue("Each lollipop indicates a matchday.<br>
                             Height of lollipops and colors indicate opponent's implied strength: <b style='color:{tier_shape_colors[1]}'>top</b>,
-                            <b style='color:{tier_shape_colors[2]}'>middle</b>, <b style='color:{tier_shape_colors[3]}'>bottom</b> tier.<br>
+                            <b style='color:grey50'>middle</b>, <b style='color:{tier_shape_colors[3]}'>bottom</b> tier.<br>
                             Filled circles indicate home games. Only the first half of the campaign is displayed.")
 
 # draw plot
@@ -346,7 +352,8 @@ p <- p + theme(
 
 p
 
-ggsave("plots/bundesliga_fixture_difficulty_by_team_lollipop.png", type = "cairo", dpi = 320, width = 8, height = 5.3, scale = 1.3)
+ggsave("plots/bundesliga_fixture_difficulty_by_team_lollipop.png", type = "cairo", 
+       dpi = 320, width = 8, height = 5.3, scale = 1.3)
 
 
 
@@ -359,7 +366,7 @@ lines_y <- 1:17 + 0.5
 plot_subtitle <- sprintf("Color gradients indicate opponent's implied strength: <b style='color:%s'>top</b>,
                           <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier. 
                          White squares denote home matches.", 
-                         tier_shape_colors[1], tier_shape_colors[2], tier_shape_colors[3])
+                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
 
 # caption
 plot_caption <- "Opponent's implied strength: Teams have been ranked based on the pre-season odds of winning the Bundesliga title (as of 17 September 2020).
@@ -425,7 +432,7 @@ plot_subtitle <- sprintf("Opponent's implied strength in the first 6 fixtures fo
 Colors indicate opponent's implied strength: 
                           <b style='color:%s'>top</b>,
                           <b style='color:%s'>middle</b>, <b style='color:%s'>bottom</b> tier.", 
-                         tier_shape_colors[1], tier_shape_colors[2], tier_shape_colors[3])
+                         tier_shape_colors[1], "grey50", tier_shape_colors[3])
 
 # caption
 plot_caption <- "Opponent's implied strength: Teams have been ranked based on the pre-season odds 
@@ -462,5 +469,5 @@ p <- p + theme(
 p
 
 ggsave("plots/bundesliga_fixture_difficulty_first6fixtures.png", type = "cairo", dpi = 320, 
-       width = 4, height = 6, scale = 1.5)
+       width = 4, height = 6, scale = 1.4)
 
