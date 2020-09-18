@@ -81,7 +81,7 @@ names(icon_files) <- odds$team
 icon_files <- icon_files[order(odds$rank)]
 
 # surround icons with HTML <img> tags
-icon_labels <- sprintf("<img src='%s%s' width='18'>&nbsp;%s", 
+icon_labels <- sprintf("<img src='%s%s' width='15'>&nbsp;%s", 
                        icons_dir, rev(icon_files),
                        str_pad(18:1, width = 2, side = "left", pad = " "))
 
@@ -142,8 +142,9 @@ Colors indicate opponent's implied strength: <b style='color:%s'>top</b>,
                          tier_shape_colors[1], "grey50", tier_shape_colors[3])
 
 # caption
-plot_caption <- "Opponent's implied strength: Teams have been ranked based on the pre-season odds of winning the Bundesliga title (as of 17 September 2020).
-Odds were obtained from bwin.de and tipico.de. For ranking, the geometric mean of the odds for each team was calculated. 
+plot_caption <- "Opponent's implied strength: Teams have been ranked based on the pre-season odds of winning the 
+Bundesliga title (as of 17 September 2020). Odds were obtained from bwin.de and tipico.de. 
+For ranking, the geometric mean of the odds for each team was calculated. 
 Ties were solved by picking the first item.\n
 Source: github.com/bydata"
 
