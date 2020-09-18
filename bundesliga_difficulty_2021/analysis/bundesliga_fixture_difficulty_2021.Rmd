@@ -33,6 +33,7 @@ To re-create the fixture difficulty schedule for the Bundesliga season, I used `
 **Amendments to original chart:**
 
 * Home / away games highlighted with filled / hollow shapes instead of bold / plain print
+* Used a bit of spacing to separate months visually.
 * Club emblems instead of text labels
 * Colors explained in the subtitle, getting rid of the extra legend
 
@@ -69,6 +70,7 @@ knitr::include_graphics("../plots/bundesliga_fixture_difficulty_first6fixtures.p
 
 ## Code
 
-The R code for creating these plots can be found here: [03_bundesliga_difficulty_chart.R](../R/03_bundesliga_difficulty_chart.R).
+The R code for creating these plots can be found here: [03_bundesliga_difficulty_chart.R](https://github.com/bydata/football_data/blob/master/bundesliga_difficulty_2021/R/03_bundesliga_difficulty_chart.R).
 
+<br><br><br>
 
