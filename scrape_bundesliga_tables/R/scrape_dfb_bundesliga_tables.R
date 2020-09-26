@@ -92,8 +92,6 @@ all_tables <- clusterMap(cl, scrape_table_possibly,
                          seasons_matchday_mapping$season, seasons_matchday_mapping$season_id, seasons_matchday_mapping$matchday_id)
 
 stopCluster(cl)
-
-#all_tables <- pmap(season_matchday_mapping[1:10, ], scrape_table_possibly)
 toc()
 
 # check if there are any missing matchdays
