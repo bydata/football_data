@@ -17,10 +17,11 @@ seasons_mapping <- tibble(
   separate(id, into = c("season_id", "matchday_id"), sep = "\\|") %>% 
   arrange(season)
 
+
 # use season mapping to send request to retrieve each seasons final table
 # example url: https://www.dfb.de/bundesliga/spieltagtabelle/?spieledb_path=%2Fcompetitions%2F12%2Fseasons%2F17820%2Fmatchday%2F34
 
-scrape_season_table <- function(season, season_id, matchday_id) {
+scrape_table <- function(season, season_id, matchday_id) {
   url <- sprintf("https://www.dfb.de/bundesliga/spieltagtabelle/?spieledb_path=%%2Fcompetitions%%2F12%%2Fseasons%%2F%s%%2Fmatchday%%2F%s", season_id, matchday_id)
   page <- read_html(url)
   
@@ -42,9 +43,9 @@ scrape_season_table <- function(season, season_id, matchday_id) {
   df
 }
 
-# scrape all seasons at once and store them in a list (takes a while)
+# scrape final tables all seasons at once and store them in a list (takes a while)
 tic()
-final_tables <- pmap(seasons_mapping, scrape_season_table)
+final_tables <- pmap(seasons_mapping, scrape_table)
 toc()
 
 # name the list items with season names
@@ -59,3 +60,94 @@ write_rds(final_tables, "output/bundesliga_final_tables.RData", compress = "gz")
 # save as csv file
 final_tables_flat <- bind_rows(final_tables)
 write_csv(final_tables_flat, "output/bundesliga_final_tables.csv")
+
+
+
+### all matchdays
+library(parallel)
+
+# scrape all seasons at once and store them in a list (takes a while)
+tic()
+
+seasons_mapping[seasons_mapping$season == "2019/2020", ]$matchday_id <- 34
+
+seasons_matchday_mapping <- expand.grid(season = pull(seasons_mapping, season), matchday_id = 1:34) %>% 
+  left_join(seasons_mapping, by = "season") %>% 
+  filter(matchday_id.x <= as.numeric(matchday_id.y)) %>% 
+  rename(matchday_id = matchday_id.x) %>% 
+  select(season, season_id, matchday_id) %>% 
+  arrange(season, matchday_id) 
+
+scrape_table_possibly <- possibly(scrape_table, otherwise = NULL)
+
+
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores)
+clusterExport(cl, as.list(unique(c(ls(.GlobalEnv),ls(environment())))),envir = environment())
+clusterEvalQ(cl,
+             {library(tidyverse)
+               library(rvest)
+             })
+all_tables <- clusterMap(cl, scrape_table_possibly, 
+                         seasons_matchday_mapping$season, seasons_matchday_mapping$season_id, seasons_matchday_mapping$matchday_id)
+
+stopCluster(cl)
+
+#all_tables <- pmap(season_matchday_mapping[1:10, ], scrape_table_possibly)
+toc()
+
+# check if there are any missing matchdays
+all_tables %>% 
+  map(class) %>% 
+  bind_cols() %>% 
+  pivot_longer(cols = everything(), names_to = "season", values_to = "class") %>% 
+  filter(class == "NULL")
+
+#scrape_table("1995/1996", seasons_mapping[seasons_mapping$season == "1995/1996", "season_id"], 12)
+
+write_rds(all_tables, "output/bundesliga_all_tables_list.RData")
+
+
+all_tables %>% 
+  bind_rows() %>% 
+  distinct(team) %>% 
+  arrange(team)
+
+all_tables %>% 
+  bind_rows() %>% 
+  mutate(row = row_number()) %>% 
+  filter(is.na(team))
+
+all_tables %>% 
+  bind_rows() %>% 
+  mutate(row = row_number()) %>% 
+  filter(row >= 1610 & row <= 1620)
+
+#table_6667_11 <- scrape_table("1966/1967", seasons_mapping[seasons_mapping$season == "1966/1967", "season_id"], 3)
+
+
+# some cleaning of team names required
+all_tables <- all_tables %>% 
+  map(~mutate(.x,
+              team = case_when(
+                team == "Werder Bremen" ~ "SV Werder Bremen",
+                str_detect(team, "Uerdingen") ~ "KFC Uerdingen 05",
+                str_detect(team, "Hoffenheim") ~ "TSG Hoffenheim",
+                team == "Meidericher SV" ~ "MSV Duisburg",
+                TRUE ~ team
+                )
+  ))
+
+
+all_tables_df <- bind_rows(all_tables)
+write_rds(all_tables, "output/bundesliga_all_tables_list.RData")
+write_rds(all_tables_df, "output/bundesliga_all_tables_df.RData")
+write_csv(all_tables_df, "output/bundesliga_all_tables.csv")
+
+
+# all_tables %>% 
+#   map_df(class) %>% 
+#   pivot_longer(cols = everything(), names_to = "season", values_to = "class") %>% 
+#   distinct(class)
+
+
