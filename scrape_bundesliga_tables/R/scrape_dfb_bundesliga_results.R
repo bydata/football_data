@@ -25,7 +25,7 @@ scrape_crosstable_pages <- function(season, season_id, matchday_id) {
   page
 }
  
-extract_crosstable <- function(page) { 
+extract_crosstable <- function(season, page) { 
   # extract crosstable using xpath and transform into data frame
   crosstable <- page %>% 
     html_node(xpath = "//div[@id='table-cross']/table") 
@@ -43,8 +43,6 @@ extract_crosstable <- function(page) {
   df <- df %>% 
     bind_cols(home = rows) %>% 
     select(home, everything(), -X1) %>% 
-    # mutate_all(.funs = list(~str_remove_all(., fixed("\n")) %>% 
-    #                           str_trim())) %>% 
     pivot_longer(cols = c(-home), names_to = "away", values_to = "result") %>% 
     mutate(result = str_remove_all(result, fixed("\n")) %>%
                       str_trim()) %>% 
@@ -64,13 +62,13 @@ pages <- pmap(seasons_mapping, scrape_crosstable_pages)
 toc()
 
 # extract crosstables from pages
-crosstables <- pmap(list(pages), extract_crosstable)
+crosstables <- pmap(list(seasons_mapping$season, pages), extract_crosstable)
 
 # name the list items with season names
 crosstables <- crosstables %>% 
   set_names(seasons_mapping$season)
 
-write_rds(final_tables, "output/bundesliga_results_crosstable.RData", compress = "gz")
+write_rds(crosstables, "output/bundesliga_results_crosstable.RData", compress = "gz")
 
 # save as csv file
 crosstables_flat <- bind_rows(crosstables)
