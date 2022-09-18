@@ -10,19 +10,31 @@ url <- "https://www.dfb.de/bundesliga/spieltagtabelle/"
 page <- read_html(url)
 ddoptions <- html_nodes(page, xpath = "//select[@id='seasons']/option")
 
+# seasons_mapping <- tibble(
+#   season = html_text(ddoptions),
+#   id = html_attr(ddoptions, name = "value")
+# ) %>% 
+#   separate(id, into = c("season_id", "matchday_id"), sep = "\\|") %>% 
+#   arrange(season)
+
 seasons_mapping <- tibble(
   season = html_text(ddoptions),
-  id = html_attr(ddoptions, name = "value")
-) %>% 
-  separate(id, into = c("season_id", "matchday_id"), sep = "\\|") %>% 
+  season_id = html_attr(ddoptions, name = "value")) %>% 
+  mutate(
+    season_id = str_remove_all(season_id, "[^0-9-]"),
+    matchday_id = NA) %>% 
   arrange(season)
-
 
 # use season mapping to send request to retrieve each seasons final table
 # example url: https://www.dfb.de/bundesliga/spieltagtabelle/?spieledb_path=%2Fcompetitions%2F12%2Fseasons%2F17820%2Fmatchday%2F34
 
-scrape_table <- function(season, season_id, matchday_id) {
-  url <- sprintf("https://www.dfb.de/bundesliga/spieltagtabelle/?spieledb_path=%%2Fcompetitions%%2F12%%2Fseasons%%2F%s%%2Fmatchday%%2F%s", season_id, matchday_id)
+scrape_table <- function(season, season_id, matchday_id = "current") {
+  # url <- sprintf("https://www.dfb.de/bundesliga/spieltagtabelle/?spieledb_path=%%2Fcompetitions%%2F12%%2Fseasons%%2F%s%%2Fmatchday%%2F%s", season_id, matchday_id)
+  # page url pattern has changed
+  if (is.na(matchday_id)) matchday_id <- "current"
+  url <- sprintf(
+    "https://www.dfb.de/bundesliga/spieltagtabelle/?spieledb_path=/datencenter/bundesliga/%s/%s",
+      season_id, matchday_id)
   page <- read_html(url)
   
   # extract result table using xpath and transform into data frame
@@ -43,6 +55,7 @@ scrape_table <- function(season, season_id, matchday_id) {
   df
 }
 
+
 # scrape final tables all seasons at once and store them in a list (takes a while)
 tic()
 final_tables <- pmap(seasons_mapping, scrape_table)
@@ -55,11 +68,11 @@ final_tables <- final_tables %>%
 # remove current season from the list
 final_tables[[nrow(seasons_mapping)]] <- NULL
 
-write_rds(final_tables, "output/bundesliga_final_tables.RData", compress = "gz")
+write_rds(final_tables, "scrape_bundesliga_tables/output/bundesliga_final_tables.rds", compress = "gz")
 
 # save as csv file
 final_tables_flat <- bind_rows(final_tables)
-write_csv(final_tables_flat, "output/bundesliga_final_tables.csv")
+write_csv(final_tables_flat, "scrape_bundesliga_tables/output/bundesliga_final_tables.csv")
 
 
 
@@ -69,17 +82,17 @@ library(parallel)
 # scrape all seasons at once and store them in a list (takes a while)
 tic()
 
-seasons_mapping[seasons_mapping$season == "2019/2020", ]$matchday_id <- 34
+# seasons_mapping[seasons_mapping$season == "2019/2020", ]$matchday_id <- 34
 
-seasons_matchday_mapping <- expand.grid(season = pull(seasons_mapping, season), matchday_id = 1:34) %>% 
+seasons_matchday_mapping <- expand.grid(season = pull(seasons_mapping, season), matchday_id = 1:38) %>% 
   left_join(seasons_mapping, by = "season") %>% 
-  filter(matchday_id.x <= as.numeric(matchday_id.y)) %>% 
+  # filter(matchday_id.x <= as.numeric(matchday_id.y)) %>% 
   rename(matchday_id = matchday_id.x) %>% 
   select(season, season_id, matchday_id) %>% 
   arrange(season, matchday_id) 
 
 scrape_table_possibly <- possibly(scrape_table, otherwise = NULL)
-
+scrape_table_safely <- safely(scrape_table, otherwise = NULL)
 
 no_cores <- detectCores() - 1
 cl <- makeCluster(no_cores)
@@ -89,7 +102,9 @@ clusterEvalQ(cl,
                library(rvest)
              })
 all_tables <- clusterMap(cl, scrape_table_possibly, 
-                         seasons_matchday_mapping$season, seasons_matchday_mapping$season_id, seasons_matchday_mapping$matchday_id)
+                         seasons_matchday_mapping$season,
+                         seasons_matchday_mapping$season_id, 
+                         seasons_matchday_mapping$matchday_id)
 
 stopCluster(cl)
 toc()
@@ -103,7 +118,7 @@ all_tables %>%
 
 #scrape_table("1995/1996", seasons_mapping[seasons_mapping$season == "1995/1996", "season_id"], 12)
 
-write_rds(all_tables, "output/bundesliga_all_tables_list.RData")
+write_rds(all_tables, "scrape_bundesliga_tables/output/bundesliga_all_tables_list.rds")
 
 
 all_tables %>% 
@@ -126,6 +141,7 @@ all_tables %>%
 
 # some cleaning of team names required
 all_tables <- all_tables %>% 
+  compact() %>% 
   map(~mutate(.x,
               team = case_when(
                 team == "Werder Bremen" ~ "SV Werder Bremen",
@@ -137,10 +153,10 @@ all_tables <- all_tables %>%
   ))
 
 
-all_tables_df <- bind_rows(all_tables)
-write_rds(all_tables, "output/bundesliga_all_tables_list.RData")
-write_rds(all_tables_df, "output/bundesliga_all_tables_df.RData")
-write_csv(all_tables_df, "output/bundesliga_all_tables.csv")
+all_tables_df <- bind_rows(all_tables) %>% distinct()
+write_rds(all_tables, "scrape_bundesliga_tables/output/bundesliga_all_tables_list.rds")
+write_rds(all_tables_df, "scrape_bundesliga_tables/output/bundesliga_all_tables_df.rds")
+write_csv(all_tables_df, "scrape_bundesliga_tables/output/bundesliga_all_tables.csv")
 
 
 # all_tables %>% 
