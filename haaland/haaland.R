@@ -55,8 +55,8 @@ big5_fw_standard_poss %>%
       in the 2022/2023 season
     ", min_played_threshold),
     caption = "Source: FBRef. Visualisation: Ansgar Wolsing",
-    #x = "npxG per 90 mins",
-    # y = "Goals per 90 mins",
+    x = "npxG per 90 mins",
+    y = "Goals per 90 mins",
     size = "Total minutes played"
   ) +
   theme_minimal(base_family = "Roboto Condensed") +
