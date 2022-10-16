@@ -11,7 +11,8 @@ season_2023 <- bundesliga_tables %>%
   filter(start_year == 2023) %>% 
   select(season, position, played, points_3pt) %>%
   add_row(season = "2022/2023", position = NA, played = 8, points_3pt = 15) %>%
-  add_row(season = "2022/2023", position = NA, played = 9, points_3pt = 16)
+  add_row(season = "2022/2023", position = NA, played = 9, points_3pt = 16) %>%
+  add_row(season = "2022/2023", position = NA, played = 10, points_3pt = 16)
 
 bundesliga_tables %>% 
   filter(team == "Borussia Dortmund") %>% 
@@ -148,7 +149,7 @@ df_plot %>%
   labs(
     title = "<b style='color:#FDE100'>Saisonstart 2022/'23</b>
     von Borussia Dortmund im historischen Vergleich",
-    subtitle = "Borussia Dortmund erreicht nach 9 Spieltagen 16 Punkte",
+    subtitle = "Borussia Dortmund erreicht nach 10 Spieltagen 16 Punkte",
     caption = "Für alle Saisons vor Einführung der 3-Punkte-Regel wurden die Punktzahlen 
     auf die 3-Punkte-Regel umgerechnet.<br>
     Daten: DFB. Visualisierung: Ansgar Wolsing",
@@ -166,7 +167,7 @@ df_plot %>%
     plot.subtitle = element_markdown(),
     plot.caption = element_markdown(lineheight = 1.1)
   )
-ggsave(here(base_path, "bvb-saisonstart-lines-until-current-matchday-09.png"), dpi = 500, width = 8, height = 6.5)
+ggsave(here(base_path, "bvb-saisonstart-lines-until-current-matchday-10.png"), dpi = 500, width = 8, height = 6.5)
 
 
 ## Compared to the last 10 seasons --------------
@@ -227,7 +228,7 @@ df_plot %>%
   coord_cartesian(clip = "off") +
   labs(
     title = "Saisonstart 2022/'23 von Borussia Dortmund",
-    subtitle = "Nach 9 Spieltagen, im Vergleich zu den vergangenen 10 Jahren",
+    subtitle = "Nach 10 Spieltagen, im Vergleich zu den vergangenen 10 Jahren",
     caption = "Daten: DFB. Visualisierung: Ansgar Wolsing",
     x = "Spieltag", y = "Punkte (3-Punkte-Regel)"
   ) +
@@ -243,5 +244,5 @@ df_plot %>%
     plot.subtitle = element_markdown(),
     plot.caption = element_markdown(lineheight = 1.1)
   )
-ggsave(here(base_path, "bvb-saisonstart-lines-last-decade-until-current-matchday-09.png"), 
+ggsave(here(base_path, "bvb-saisonstart-lines-last-decade-until-current-matchday-10.png"), 
        dpi = 300, width = 7, height = 5.5)
