@@ -8,9 +8,9 @@ bundesliga_tables <- read_rds(bundesliga_tables_data_path)
 
 season_2023 <- tibble(
   season = "2022/2023",
-  position = c(1, 1, 1, 1, 3, 3, 4),
-  played = 1:7,
-  points_3pt = c(3, 6, 9, 10, 11, 12, 12)
+  position = c(1, 1, 1, 1, 3, 3, 4, 3, 3),
+  played = 1:9,
+  points_3pt = c(3, 6, 9, 10, 11, 12, 12, 15, 16)
 )
 
 bundesliga_tables %>% 
@@ -84,7 +84,7 @@ df_plot %>%
 
 df_plot %>% 
   filter(played == max(season_2023$played)) %>% 
-  filter(points_3pt == 12)
+  filter(points_3pt == max(season_2023$points_3pt))
 
 ribbon_summary <- function(x) {
   data.frame(ymin = min(x), ymax = max(x))
@@ -135,20 +135,20 @@ df_plot %>%
   ) +
   annotate(
     "label",
-    label = c("47 Saisons", "10 Saisons"),
+    label = c("43 Saisons", "14 Saisons"),
     x = max(season_2023$played) + 0.1,
-    y = c(16, 10),
+    y = c(19, 14),
     hjust = 0, family = "Roboto Condensed", color = "grey90", size = 2.5,
     label.size = 0, fill = alpha("grey24", 0.8)
   ) +
-  scale_x_continuous(limits = c(1, 7.25), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, max(season_2023$played) + 0.25), 
+                     breaks = seq(1, max(season_2023$played), 1)) +
   scale_y_continuous(position = "left", breaks = seq(0, 102, 3)) +
   coord_cartesian(clip = "off") +
   labs(
-    title = "Vom bestem zu einem der schlechteren Saisonstarts in nur 4 Spieltagen",
-    subtitle = "Der FC Bayern erreicht nach 7 Spieltagen der
-    <b style='color:#9D8DF1'>Saison 2022/'23</b>
-    lediglich 12 Punkte",
+    title = "<b style='color:#9D8DF1'>Saisonstart 2022/'23</b>
+    des FC Bayern im historischen Vergleich",
+    subtitle = "43 Mal gelang den Münchnern ein besserer Saisonstart",
     caption = "Für alle Saisons vor Einführung der 3-Punkte-Regel wurden die Punktzahlen 
     auf die 3-Punkte-Regel umgerechnet.<br>
     Daten: DFB. Visualisierung: Ansgar Wolsing",
@@ -161,12 +161,94 @@ df_plot %>%
     panel.grid.major.y = element_line(color = "grey30", size = 0.1),
     text = element_text(color = "grey80"),
     axis.text = element_text(color = "grey80"),
-    plot.title = element_text(face = "bold", color = "white", size = 16),
+    plot.title = element_markdown(face = "bold", color = "white", size = 16),
     plot.title.position = "plot",
     plot.subtitle = element_markdown(),
-    plot.caption = element_markdown()
+    plot.caption = element_markdown(lineheight = 1.1)
   )
-ggsave(here(base_path, "fcb-saisonstart-lines-until-current-matchday.png"), dpi = 500, width = 8, height = 6.5)
+ggsave(here(base_path, "fcb-saisonstart-lines-until-current-matchday-matchday-09.png"), dpi = 500, width = 8, height = 6.5)
+
+
+## Compared to last 10 seasons --------
+
+df_plot %>% 
+  select(season, position, played, points_3pt) %>%
+  filter(season >= "2012/'13") %>% 
+  ggplot(aes(played, points_3pt, group = season)) +
+  geom_line(color = "grey50", size = 0.15, alpha = 0.6) +
+  stat_summary(
+    geom = "ribbon",
+    fun.data = ribbon_summary,
+    aes(x = played, y = points_3pt),
+    color = "white", fill = alpha("grey74", 0.8),
+    inherit.aes = FALSE
+  ) +
+  ggfx::with_outer_glow(
+    geom_line(data = season_2023, color = "#DC052D", size = 1.4),
+    expand = 2, sigma = 1) +
+  ggfx::with_outer_glow(
+    geom_point(
+    data = filter(season_2023, played == max(played)),
+    color = "#DC052D", size = 2
+  ), expand = 2, sigma = 1) +
+  geom_label(
+    data = filter(season_2023, played == max(played)),
+    aes(label = season),
+    color = "#DC052D", size = 3, hjust = 0, nudge_x = 0.1, family = "Roboto Condensed",
+    label.size = 0, fill = alpha("grey63", 0.6)
+  ) +
+  # best seasons
+  ggrepel::geom_text_repel(
+    data = . %>% 
+      group_by(season) %>% 
+      filter(played == max(played)) %>% 
+      ungroup() %>% 
+      slice_max(order_by = points_3pt, n = 1),
+    aes(label = season),
+    hjust = 0, color = "grey30", size = 2, box.padding = 0.1,
+    direction = "y", nudge_x = 0.1, family = "Roboto Condensed"
+  ) +
+  # worst seasons
+  ggrepel::geom_text_repel(
+    data = . %>% 
+      group_by(season) %>% 
+      filter(played == max(played)) %>% 
+      ungroup() %>% 
+      slice_min(order_by = points_3pt, n = 1),
+    aes(label = season),
+    hjust = 0, color = "grey30", size = 2, box.padding = 0.1,
+    direction = "y", nudge_x = 0.1, family = "Roboto Condensed"
+  ) +
+  scale_x_continuous(limits = c(1, max(season_2023$played) + 0.5), 
+                     breaks = seq(1, max(season_2023$played), 1)) +
+  scale_y_continuous(limits = c(0, 3 * max(season_2023$played) + 1),
+                     position = "left", breaks = seq(0, 102, 3)) +
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "<b style='color:#DC052D'>Saisonstart 2022/'23</b>
+    des FC Bayern",
+    subtitle = "Nach 9 Spieltagen, im Vergleich zu den vergangenen 10 Jahren",
+    caption = "Daten: DFB. Visualisierung: Ansgar Wolsing",
+    x = "Spieltag", y = "Punkte (3-Punkte-Regel)"
+  ) +
+  theme_minimal(base_family = "Roboto Condensed") +
+  theme(
+    plot.background = element_rect(color = "grey90", fill = "grey90"),
+    panel.grid = element_blank(),
+    panel.grid.major.y = element_line(color = "grey30", size = 0.1),
+    text = element_text(color = "grey20"),
+    axis.text = element_text(color = "grey20"),
+    plot.title = element_markdown(face = "bold", color = "black", size = 16),
+    plot.title.position = "plot",
+    plot.subtitle = element_markdown(),
+    plot.caption = element_markdown(lineheight = 1.1)
+  )
+ggsave(here(base_path, "fcb-saisonstart-lines-last-decade-until-current-matchday-matchday-09.png"), 
+       dpi = 300, width = 7, height = 5.5)
+
+
+
+
 
 
 ## Season results after a "bad" start
@@ -301,3 +383,12 @@ df_plot %>%
   )
 ggsave(here(base_path, "fcb-saisonstart-lines-final_result.png"), width = 7, height = 4)
 
+
+bundesliga_tables %>% 
+  filter(played == 7, points_3pt >= 12) %>% 
+  count(team, sort = TRUE) %>% 
+  mutate(team = fct_reorder(team, n)) %>% 
+  ggplot(aes(team, n)) +
+  geom_col() +
+  coord_flip() +
+  theme_minimal()
