@@ -26,7 +26,10 @@ league_pal_epl_highlighted <- c(unname(league_pal["Premier League"]),
                                 colorspace::desaturate(league_pal[2:5], 0.6))
 # colorspace::lighten(colorspace::desaturate(league_pal, 0.6), 0.2)
 league_pal_epl_highlighted_greyscale <- c(unname(colorspace::desaturate(league_pal["Premier League"], 0.6)), 
-                                       "grey30", "grey45", "grey60", "grey75")
+                                          "grey30", "grey45", "grey60", "grey75")
+league_pal_chelsea_highlighted_greyscale <- c(
+  "#034694", colorspace::lighten(colorspace::desaturate("#034694", 0.5), 0.3),
+  "grey30", "grey45", "grey60", "grey75")
 
 transfers_df %>% 
   filter(transfer_type == "Arrivals" & !is.na(transfer_fee)) %>% 
@@ -150,6 +153,7 @@ p_team_beeswarm <- beeswarm_df %>%
   labs(
     title = "Chelsea spent a lot more than any other team",
     subtitle = "Transfer spendings of teams in European top 5 leagues",
+    caption = "Source: transfermarkt.de, {worldfootballR} package. Visualisation: Ansgar Wolsing",
     x = NULL,
     y = "Total transfer fees (in EUR)",
     fill = NULL
@@ -344,7 +348,6 @@ str_wrap_html <- function (string, width = 80, indent = 0, exdent = 0) {
 
 show_label_threshold <- 41e6
 
-
 transfers_tmp_df %>% 
   group_by(window, league) %>% 
   summarize(total_transfer_fee = sum(total_transfer_fee), .groups = "drop")
@@ -413,7 +416,7 @@ treemap_df %>%
     data = . %>% filter(team_name == "Chelsea FC"),
     aes(xmin = subgroup2_xmin, xmax = subgroup2_xmax,
         ymin = subgroup2_ymin, ymax = subgroup2_ymax),
-    color = "white",  fill = league_pal["Premier League"], 
+    color = "white",  fill = league_pal_chelsea_highlighted_greyscale[1], 
     size = 0.2) +
   geom_richtext(
     data = . %>% group_by(window, team_name, label) %>% 
@@ -425,13 +428,14 @@ treemap_df %>%
     family = "Roboto Condensed", lineheight = 1, size = 2.5) +
   facet_grid(cols = vars(window), space = "free", scales = "free_x") +
   scale_y_continuous(expand = c(0.025, 0)) +
-  scale_fill_manual(values = league_pal_epl_highlighted_greyscale) +
+  # scale_fill_manual(values = league_pal_epl_highlighted_greyscale) +
+  scale_fill_manual(values = league_pal_chelsea_highlighted_greyscale[2:6]) +
   guides(fill = guide_legend(override.aes = list(size = 2))) +
   labs(
     title = sprintf("<b style='color:%s'>Chelsea FC</b> spent most of 
     all clubs in top 5 leagues in 2022-23.
     In the winter transfer window, they spent more than La Liga, Bundesliga,
-    Ligue 1 and Serie A combined.", league_pal["Premier League"]),
+    Ligue 1 and Serie A combined.", league_pal_chelsea_highlighted_greyscale[1]),
     subtitle = "Total transfers amounts per team in 2022-23",
     caption = "Source: transfermarkt.de, {worldfootballR} package. Visualisation: Ansgar Wolsing",
     fill = NULL) +
@@ -439,8 +443,7 @@ treemap_df %>%
   theme(
     legend.key.width = unit(4, "mm"),
     legend.key.height = unit(2, "mm"),
-    plot.title = element_textbox(width = 1, face = "plain", size = 16, lineheight = 1.2)
-  )
+    plot.title = element_textbox(width = 1, face = "plain", size = 16, lineheight = 1.2))
 ggsave(here(base_path, "plots", "transfers-treemap-leagues-facetted.png"), width = 8.5, height = 7)
 
 
