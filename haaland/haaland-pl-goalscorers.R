@@ -3,6 +3,7 @@ library(worldfootballR)
 library(ggtext)
 library(here)
 library(lubridate)
+library(ggbump)
 
 base_path <- "haaland"
 
@@ -14,7 +15,7 @@ player_league_stats <- map(
     gender = "M",
     season_end_year = .x,
     tier = "1st",
-    non_dom_league_url = NA,
+    # non_dom_league_url = NA,
     stat_type = "shooting",
     team_or_player = "player"
   )
@@ -31,6 +32,8 @@ top_goalscorers <- map(player_league_stats, select_top_goalscorer) %>%
   set_names(season_end_years) %>% 
   bind_rows(.id = "season_end_year")
 write_rds(top_goalscorers, here(base_path, "top_goalscorers.rds"))
+
+top_goalscorers <- read_rds(here(base_path, "top_goalscorers.rds"))
 
 # get player URLs
 league_urls <- map_chr(
@@ -84,11 +87,6 @@ top_goalscorers_urls <-
     "https://fbref.com/en/players/1f44ac21/Erling-Haaland"
   )
 
-# fb_player_goal_logs_possibly <- possibly(fb_player_goal_logs, otherwise = NULL)
-# top_goalscorers_goal_logs <- map(top_goalscorers_urls, fb_player_goal_logs_possibly)
-# top_goalscorers_goal_logs <- set_names(top_goalscorers_goal_logs, top_goalscorers_names)
-# write_rds(top_goalscorers_goal_logs, here(base_path, "top_goalscorers_goal_logs.rds"))
-
 top_goalscorers_seasons_urls <- top_goalscorers %>% 
   select(Player, season_end_year) %>% 
   inner_join(
@@ -106,32 +104,28 @@ top_goalscorers_match_logs <- map2(
   stat_type = "summary"
   )
 
-write_rds(top_goalscorers_match_logs, here(base_path, "top_goalscorers_match_logs.rds"))
+write_rds(top_goalscorers_match_logs, here(base_path, "top_goalscorers_match_logs-20230217.rds"))
 
+top_goalscorers_match_logs <- read_rds(here(base_path, "top_goalscorers_match_logs-20230217.rds"))
 
-# select_relevant_season_matches <- function(goal_log, 
-#                                            season_end_year, 
-#                                            top_goalscorers_goal_logs = "Premier League") {
-#   season_start_year <- season_end_year - 1
-#   first_month <- "07"
-#   last_month <- "06"
-#   goal_log %>% 
-#     mutate(matchweek = as.numeric(str_extract(Round, "\\d+")),
-#            year = str_sub(Date, 1, 4),
-#            month = str_sub(Date, 6, 7)) %>% 
-#     filter(
-#       Comp == top_goalscorers_goal_logs &
-#       ((year == as.character(season_start_year) & month >= first_month) |
-#        (year == as.character(season_end_year) & month < first_month)
-#       ) 
-#     ) %>% 
-#     arrange(Date, matchweek)
-# }
+# Haaland
+haaland_match_logs <- fb_player_match_logs(
+  "https://fbref.com/en/players/1f44ac21/Erling-Haaland", 
+  season_end_year = 2023,
+  stat_type = "summary")
+
+top_goalscorers_match_logs[[length(top_goalscorers_match_logs)]] <- haaland_match_logs
 
 #' How many top goalscorers had less goals at the end of the season
 #' than Haaland already has at this point of the season?
-goals_haaland <- top_goalscorers$Gls[top_goalscorers$season_end_year == 2023]
+# goals_haaland <- top_goalscorers$Gls[top_goalscorers$season_end_year == 2023]
+goals_haaland <- top_goalscorers_match_logs[[length(top_goalscorers_match_logs)]] %>% 
+  filter(Comp == "Premier League") %>% 
+  summarize(sum(Gls_Performance)) %>% 
+  pull()
+
 top_goalscorers %>% 
+  filter(season_end_year < 2023) %>% 
   filter(Gls < goals_haaland) %>% 
   distinct(season_end_year)
   
@@ -163,29 +157,21 @@ p <-
   geom_bump(
     smooth = 5, color = "grey50", linewidth = 0.1
   ) +
-  # geom_step(
-  #   color = "grey50", linewidth = 0.1
-  # ) +
   geom_bump(
     data = ~subset(., Player %in% relevant_players) %>%
       mutate(Player2 = factor(Player, levels = relevant_players)),
     aes(col = Player2 == "Erling Haaland"),
     smooth = 5, linewidth = 0.7, show.legend = FALSE
   ) +
-  # geom_step(
-  #   data = ~subset(., Player %in% relevant_players) %>%
-  #     mutate(Player2 = factor(Player, levels = relevant_players)),
-  #   aes(col = Player2 == "Erling Haaland"),
-  #   linewidth = 0.7, show.legend = FALSE
-  # ) +
   scale_x_continuous(breaks = seq(10, 50, 10)) +
   scale_color_manual(values = c("TRUE" = "#FF9B42", "FALSE" = "#00A7E1")) +
   facet_wrap(vars(Player2)) +
   labs(
     title = "<span style='color:#FF9B42'>Erling Haaland</span> keeps on scoring",
     subtitle = glue::glue(
-    "Haaland has scored {goals_haaland} Premier League goals after 21 games, 
-    already surpassing the final tally of the top scorers of 12 seasons. 
+    "Haaland has scored {goals_haaland} Premier League goals after
+    {matchweeks_max_current_season} matchweeks, 
+    already surpassing the final tally of the top scorers of 19 seasons. 
     The graph shows Haaland's goalscoring progression compared to the other 
     season's top scorers in the Premier League. 
     The top 5 season top goalscorers are presented. The progress of all other topscorers
@@ -211,7 +197,7 @@ p <-
     plot.subtitle = element_textbox(width = 0.92),
     plot.caption = element_markdown()
   )
-ggsave(here(base_path, "haaland-pl-goalscorers.png"), width = 8, height = 5)
+ggsave(here(base_path, "haaland-pl-goalscorers-20230318.png"), width = 8, height = 5)
 
 
 top_goalscorers_match_logs %>% 
@@ -221,5 +207,5 @@ top_goalscorers_match_logs %>%
   group_by(Player, Season) %>% 
   mutate(gls_cumul = cumsum(gls)) %>% 
   ungroup() %>% 
-  filter(Round == "Matchweek 21") %>% 
+  filter(Round == "Matchweek 27") %>% 
   select(Player, Season, gls_cumul) 
