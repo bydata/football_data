@@ -15,7 +15,6 @@ player_league_stats <- map(
     gender = "M",
     season_end_year = .x,
     tier = "1st",
-    # non_dom_league_url = NA,
     stat_type = "shooting",
     team_or_player = "player"
   )
@@ -128,6 +127,16 @@ top_goalscorers %>%
   filter(season_end_year < 2023) %>% 
   filter(Gls < goals_haaland) %>% 
   distinct(season_end_year)
+top_goalscorers %>% 
+  filter(season_end_year < 2023) %>% 
+  filter(Gls >= goals_haaland) %>% 
+  distinct(season_end_year)
+
+top_goalscorers %>% 
+  filter(season_end_year < 2023) %>% 
+  filter(Gls > goals_haaland) %>% 
+  distinct(Player, season_end_year)
+
   
 relevant_players <- c("Erling Haaland", "Andy Cole", "Alan Shearer",
                       "Mohamed Salah", "Cristiano Ronaldo", "Luis Suárez")
@@ -153,6 +162,8 @@ p <-
   # 42 matchweeks only to season 1994-1995, after that 38 
   filter(!(Season > "1994-1995" & matchweek > 38) & 
            !(Season == max(Season) & matchweek > matchweeks_max_current_season)) %>%
+  # TEMP
+  # add_row(Player = "Erling Haaland", Season = "2022-2023", matchweek = 30, gls = 2, gls_cumul = 30) %>% 
   ggplot(aes(matchweek, gls_cumul, group = paste(Player, Season, sep = "#"))) +
   geom_bump(
     smooth = 5, color = "grey50", linewidth = 0.1
@@ -168,10 +179,10 @@ p <-
   facet_wrap(vars(Player2)) +
   labs(
     title = "<span style='color:#FF9B42'>Erling Haaland</span> keeps on scoring",
+    # ... already surpassing the final tally of the top scorers of 21 seasons
     subtitle = glue::glue(
     "Haaland has scored {goals_haaland} Premier League goals after
-    {matchweeks_max_current_season} matchweeks, 
-    already surpassing the final tally of the top scorers of 19 seasons. 
+    {matchweeks_max_current_season} matchweeks. 
     The graph shows Haaland's goalscoring progression compared to the other 
     season's top scorers in the Premier League. 
     The top 5 season top goalscorers are presented. The progress of all other topscorers
@@ -197,7 +208,7 @@ p <-
     plot.subtitle = element_textbox(width = 0.92),
     plot.caption = element_markdown()
   )
-ggsave(here(base_path, "haaland-pl-goalscorers-20230318.png"), width = 8, height = 5)
+ggsave(here(base_path, "haaland-pl-goalscorers-20230429.png"), width = 8, height = 5)
 
 
 top_goalscorers_match_logs %>% 
