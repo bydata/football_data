@@ -178,8 +178,8 @@ p <-
   scale_color_manual(values = c("TRUE" = "#FF9B42", "FALSE" = "#00A7E1")) +
   facet_wrap(vars(Player2)) +
   labs(
-    title = "<span style='color:#FF9B42'>Erling Haaland</span> keeps on scoring",
-    # ... already surpassing the final tally of the top scorers of 21 seasons
+    title = "<span style='color:#FF9B42'>Erling Haaland</span> has broken the
+    goalscoring record for a 38-game season",
     subtitle = glue::glue(
     "Haaland has scored {goals_haaland} Premier League goals after
     {matchweeks_max_current_season} matchweeks. 
