@@ -164,7 +164,7 @@ p <-
   ungroup() %>% 
   # 42 matchweeks only to season 1994-1995, after that 38 
   filter(!(Season > "1994-1995" & matchweek > 38) & 
-           !(Season == max(Season) & matchweek > matchweeks_max_current_season)) %>%
+           !(Season == max(Season) & matchweek > matchweeks_max_current_season)) %>% 
   # TEMP
   # add_row(Player = "Erling Haaland", Season = "2022-2023", matchweek = 30, gls = 2, gls_cumul = 30) %>% 
   ggplot(aes(matchweek, gls_cumul, group = paste(Player, Season, sep = "#"))) +
@@ -181,12 +181,11 @@ p <-
   scale_color_manual(values = c("TRUE" = "#FF9B42", "FALSE" = "#00A7E1")) +
   facet_wrap(vars(Player2)) +
   labs(
-    title = "<span style='color:#FF9B42'>Erling Haaland</span> has set the
+    title = "<span style='color:#FF9B42'>Erling Haaland</span> has set a new
     goalscoring Premier League record",
     subtitle = glue::glue(
     "Haaland has scored {goals_haaland} Premier League goals after
-    {matchweeks_max_current_season} games. He is level with Andy Cole and Alan 
-    Shearer, who achieved their records in 42-game seasons.
+    {matchweeks_max_current_season} games.
     The graph shows Haaland's goalscoring progression compared to the other 
     season's top scorers in the Premier League. 
     The top 5 season top goalscorers are presented. The progress of all other topscorers
@@ -209,7 +208,7 @@ p <-
     axis.text = element_text(lineheight = 1.1, color = "grey40"),
     plot.title = element_markdown(family = "Outfit SemiBold", size = 16),
     plot.title.position = "plot",
-    plot.subtitle = element_textbox(width = 0.92),
+    plot.subtitle = element_textbox(width = 0.97),
     plot.caption = element_markdown()
   )
 ggsave(here(base_path, "haaland-pl-goalscorers-20230503.png"), width = 8, height = 5)
