@@ -1,0 +1,307 @@
+matchday,year_month,date,home,away,date_text
+1,2023-08-01,2023-08-20,Borussia Dortmund,1. FC Köln,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,1. FC Union Berlin,1. FSV Mainz 05,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,Bayer 04 Leverkusen,RB Leipzig,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,Eintracht Frankfurt,SV Darmstadt 98,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,VfL Wolfsburg,1. FC Heidenheim,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,TSG Hoffenheim,SC Freiburg,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,FC Augsburg,Borussia Mönchengladbach,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-20,VfB Stuttgart,VfL Bochum,19.08. ~ 20.08.2023
+1,2023-08-01,2023-08-18,Werder Bremen,Bayern München,"Freitag,18.08.202320:30 Uhr"
+2,2023-08-01,2023-08-27,Bayern München,FC Augsburg,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,RB Leipzig,VfB Stuttgart,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,SC Freiburg,Werder Bremen,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,1. FSV Mainz 05,Eintracht Frankfurt,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,Borussia Mönchengladbach,Bayer 04 Leverkusen,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,1. FC Köln,VfL Wolfsburg,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,VfL Bochum,Borussia Dortmund,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,1. FC Heidenheim,TSG Hoffenheim,25.08. ~ 27.08.2023
+2,2023-08-01,2023-08-27,SV Darmstadt 98,1. FC Union Berlin,25.08. ~ 27.08.2023
+3,2023-09-01,2023-09-03,Borussia Dortmund,1. FC Heidenheim,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,1. FC Union Berlin,RB Leipzig,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,Bayer 04 Leverkusen,SV Darmstadt 98,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,Eintracht Frankfurt,1. FC Köln,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,Borussia Mönchengladbach,Bayern München,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,TSG Hoffenheim,VfL Wolfsburg,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,Werder Bremen,1. FSV Mainz 05,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,FC Augsburg,VfL Bochum,01.09. ~ 03.09.2023
+3,2023-09-01,2023-09-03,VfB Stuttgart,SC Freiburg,01.09. ~ 03.09.2023
+4,2023-09-01,2023-09-17,Bayern München,Bayer 04 Leverkusen,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,RB Leipzig,FC Augsburg,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,SC Freiburg,Borussia Dortmund,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,VfL Wolfsburg,1. FC Union Berlin,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,1. FSV Mainz 05,VfB Stuttgart,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,1. FC Köln,TSG Hoffenheim,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,VfL Bochum,Eintracht Frankfurt,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,1. FC Heidenheim,Werder Bremen,15.09. ~ 17.09.2023
+4,2023-09-01,2023-09-17,SV Darmstadt 98,Borussia Mönchengladbach,15.09. ~ 17.09.2023
+5,2023-09-01,2023-09-24,Bayern München,VfL Bochum,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,Borussia Dortmund,VfL Wolfsburg,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,1. FC Union Berlin,TSG Hoffenheim,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,Bayer 04 Leverkusen,1. FC Heidenheim,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,Eintracht Frankfurt,SC Freiburg,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,Borussia Mönchengladbach,RB Leipzig,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,Werder Bremen,1. FC Köln,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,FC Augsburg,1. FSV Mainz 05,22.09. ~ 24.09.2023
+5,2023-09-01,2023-09-24,VfB Stuttgart,SV Darmstadt 98,22.09. ~ 24.09.2023
+6,2023-10-01,2023-10-01,RB Leipzig,Bayern München,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,SC Freiburg,FC Augsburg,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,VfL Wolfsburg,Eintracht Frankfurt,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,1. FSV Mainz 05,Bayer 04 Leverkusen,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,1. FC Köln,VfB Stuttgart,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,TSG Hoffenheim,Borussia Dortmund,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,VfL Bochum,Borussia Mönchengladbach,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,1. FC Heidenheim,1. FC Union Berlin,29.09. ~ 01.10.2023
+6,2023-10-01,2023-10-01,SV Darmstadt 98,Werder Bremen,29.09. ~ 01.10.2023
+7,2023-10-01,2023-10-08,Bayern München,SC Freiburg,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,Borussia Dortmund,1. FC Union Berlin,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,RB Leipzig,VfL Bochum,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,Bayer 04 Leverkusen,1. FC Köln,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,Eintracht Frankfurt,1. FC Heidenheim,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,Borussia Mönchengladbach,1. FSV Mainz 05,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,Werder Bremen,TSG Hoffenheim,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,FC Augsburg,SV Darmstadt 98,06.10. ~ 08.10.2023
+7,2023-10-01,2023-10-08,VfB Stuttgart,VfL Wolfsburg,06.10. ~ 08.10.2023
+8,2023-10-01,2023-10-22,Borussia Dortmund,Werder Bremen,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,1. FC Union Berlin,VfB Stuttgart,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,SC Freiburg,VfL Bochum,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,VfL Wolfsburg,Bayer 04 Leverkusen,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,1. FSV Mainz 05,Bayern München,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,1. FC Köln,Borussia Mönchengladbach,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,TSG Hoffenheim,Eintracht Frankfurt,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,1. FC Heidenheim,FC Augsburg,20.10. ~ 22.10.2023
+8,2023-10-01,2023-10-22,SV Darmstadt 98,RB Leipzig,20.10. ~ 22.10.2023
+9,2023-10-01,2023-10-29,Bayern München,SV Darmstadt 98,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,RB Leipzig,1. FC Köln,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,Bayer 04 Leverkusen,SC Freiburg,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,Eintracht Frankfurt,Borussia Dortmund,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,Borussia Mönchengladbach,1. FC Heidenheim,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,Werder Bremen,1. FC Union Berlin,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,VfL Bochum,1. FSV Mainz 05,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,FC Augsburg,VfL Wolfsburg,27.10. ~ 29.10.2023
+9,2023-10-01,2023-10-29,VfB Stuttgart,TSG Hoffenheim,27.10. ~ 29.10.2023
+10,2023-11-01,2023-11-05,Borussia Dortmund,Bayern München,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,1. FC Union Berlin,Eintracht Frankfurt,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,SC Freiburg,Borussia Mönchengladbach,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,VfL Wolfsburg,Werder Bremen,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,1. FSV Mainz 05,RB Leipzig,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,1. FC Köln,FC Augsburg,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,TSG Hoffenheim,Bayer 04 Leverkusen,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,1. FC Heidenheim,VfB Stuttgart,03.11. ~ 05.11.2023
+10,2023-11-01,2023-11-05,SV Darmstadt 98,VfL Bochum,03.11. ~ 05.11.2023
+11,2023-11-01,2023-11-12,Bayern München,1. FC Heidenheim,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,RB Leipzig,SC Freiburg,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,Bayer 04 Leverkusen,1. FC Union Berlin,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,Borussia Mönchengladbach,VfL Wolfsburg,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,Werder Bremen,Eintracht Frankfurt,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,VfL Bochum,1. FC Köln,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,FC Augsburg,TSG Hoffenheim,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,VfB Stuttgart,Borussia Dortmund,10.11. ~ 12.11.2023
+11,2023-11-01,2023-11-12,SV Darmstadt 98,1. FSV Mainz 05,10.11. ~ 12.11.2023
+12,2023-11-01,2023-11-26,Borussia Dortmund,Borussia Mönchengladbach,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,1. FC Union Berlin,FC Augsburg,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,SC Freiburg,SV Darmstadt 98,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,Eintracht Frankfurt,VfB Stuttgart,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,VfL Wolfsburg,RB Leipzig,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,1. FC Köln,Bayern München,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,TSG Hoffenheim,1. FSV Mainz 05,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,Werder Bremen,Bayer 04 Leverkusen,24.11. ~ 26.11.2023
+12,2023-11-01,2023-11-26,1. FC Heidenheim,VfL Bochum,24.11. ~ 26.11.2023
+13,2023-12-01,2023-12-03,Bayern München,1. FC Union Berlin,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,RB Leipzig,1. FC Heidenheim,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,Bayer 04 Leverkusen,Borussia Dortmund,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,1. FSV Mainz 05,SC Freiburg,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,Borussia Mönchengladbach,TSG Hoffenheim,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,VfL Bochum,VfL Wolfsburg,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,FC Augsburg,Eintracht Frankfurt,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,VfB Stuttgart,Werder Bremen,01.12. ~ 03.12.2023
+13,2023-12-01,2023-12-03,SV Darmstadt 98,1. FC Köln,01.12. ~ 03.12.2023
+14,2023-12-01,2023-12-10,Borussia Dortmund,RB Leipzig,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,1. FC Union Berlin,Borussia Mönchengladbach,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,Eintracht Frankfurt,Bayern München,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,VfL Wolfsburg,SC Freiburg,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,1. FC Köln,1. FSV Mainz 05,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,TSG Hoffenheim,VfL Bochum,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,Werder Bremen,FC Augsburg,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,VfB Stuttgart,Bayer 04 Leverkusen,08.12. ~ 10.12.2023
+14,2023-12-01,2023-12-10,1. FC Heidenheim,SV Darmstadt 98,08.12. ~ 10.12.2023
+15,2023-12-01,2023-12-17,Bayern München,VfB Stuttgart,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,RB Leipzig,TSG Hoffenheim,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,SC Freiburg,1. FC Köln,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,Bayer 04 Leverkusen,Eintracht Frankfurt,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,1. FSV Mainz 05,1. FC Heidenheim,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,Borussia Mönchengladbach,Werder Bremen,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,VfL Bochum,1. FC Union Berlin,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,FC Augsburg,Borussia Dortmund,15.12. ~ 17.12.2023
+15,2023-12-01,2023-12-17,SV Darmstadt 98,VfL Wolfsburg,15.12. ~ 17.12.2023
+16,2023-12-01,2023-12-20,Borussia Dortmund,1. FSV Mainz 05,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,1. FC Union Berlin,1. FC Köln,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,Bayer 04 Leverkusen,VfL Bochum,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,Eintracht Frankfurt,Borussia Mönchengladbach,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,VfL Wolfsburg,Bayern München,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,TSG Hoffenheim,SV Darmstadt 98,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,Werder Bremen,RB Leipzig,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,VfB Stuttgart,FC Augsburg,19.12. ~ 20.12.2023
+16,2023-12-01,2023-12-20,1. FC Heidenheim,SC Freiburg,19.12. ~ 20.12.2023
+17,2024-01-01,2024-01-14,Bayern München,TSG Hoffenheim,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,RB Leipzig,Eintracht Frankfurt,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,SC Freiburg,1. FC Union Berlin,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,1. FSV Mainz 05,VfL Wolfsburg,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,Borussia Mönchengladbach,VfB Stuttgart,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,1. FC Köln,1. FC Heidenheim,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,VfL Bochum,Werder Bremen,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,FC Augsburg,Bayer 04 Leverkusen,12.01. ~ 14.01.2024
+17,2024-01-01,2024-01-14,SV Darmstadt 98,Borussia Dortmund,12.01. ~ 14.01.2024
+18,2024-01-01,2024-01-21,Bayern München,Werder Bremen,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,RB Leipzig,Bayer 04 Leverkusen,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,SC Freiburg,TSG Hoffenheim,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,1. FSV Mainz 05,1. FC Union Berlin,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,Borussia Mönchengladbach,FC Augsburg,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,1. FC Köln,Borussia Dortmund,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,VfL Bochum,VfB Stuttgart,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,1. FC Heidenheim,VfL Wolfsburg,19.01. ~ 21.01.2024
+18,2024-01-01,2024-01-21,SV Darmstadt 98,Eintracht Frankfurt,19.01. ~ 21.01.2024
+19,2024-01-01,2024-01-28,Borussia Dortmund,VfL Bochum,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,1. FC Union Berlin,SV Darmstadt 98,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,Bayer 04 Leverkusen,Borussia Mönchengladbach,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,Eintracht Frankfurt,1. FSV Mainz 05,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,VfL Wolfsburg,1. FC Köln,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,TSG Hoffenheim,1. FC Heidenheim,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,Werder Bremen,SC Freiburg,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,FC Augsburg,Bayern München,26.01. ~ 28.01.2024
+19,2024-01-01,2024-01-28,VfB Stuttgart,RB Leipzig,26.01. ~ 28.01.2024
+20,2024-02-01,2024-02-04,Bayern München,Borussia Mönchengladbach,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,RB Leipzig,1. FC Union Berlin,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,SC Freiburg,VfB Stuttgart,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,VfL Wolfsburg,TSG Hoffenheim,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,1. FSV Mainz 05,Werder Bremen,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,1. FC Köln,Eintracht Frankfurt,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,VfL Bochum,FC Augsburg,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,1. FC Heidenheim,Borussia Dortmund,02.02. ~ 04.02.2024
+20,2024-02-01,2024-02-04,SV Darmstadt 98,Bayer 04 Leverkusen,02.02. ~ 04.02.2024
+21,2024-02-01,2024-02-11,Borussia Dortmund,SC Freiburg,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,1. FC Union Berlin,VfL Wolfsburg,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,Bayer 04 Leverkusen,Bayern München,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,Eintracht Frankfurt,VfL Bochum,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,Borussia Mönchengladbach,SV Darmstadt 98,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,TSG Hoffenheim,1. FC Köln,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,Werder Bremen,1. FC Heidenheim,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,FC Augsburg,RB Leipzig,09.02. ~ 11.02.2024
+21,2024-02-01,2024-02-11,VfB Stuttgart,1. FSV Mainz 05,09.02. ~ 11.02.2024
+22,2024-02-01,2024-02-18,RB Leipzig,Borussia Mönchengladbach,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,SC Freiburg,Eintracht Frankfurt,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,VfL Wolfsburg,Borussia Dortmund,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,1. FSV Mainz 05,FC Augsburg,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,1. FC Köln,Werder Bremen,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,TSG Hoffenheim,1. FC Union Berlin,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,VfL Bochum,Bayern München,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,1. FC Heidenheim,Bayer 04 Leverkusen,16.02. ~ 18.02.2024
+22,2024-02-01,2024-02-18,SV Darmstadt 98,VfB Stuttgart,16.02. ~ 18.02.2024
+23,2024-02-01,2024-02-25,Bayern München,RB Leipzig,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,Borussia Dortmund,TSG Hoffenheim,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,1. FC Union Berlin,1. FC Heidenheim,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,Bayer 04 Leverkusen,1. FSV Mainz 05,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,Eintracht Frankfurt,VfL Wolfsburg,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,Borussia Mönchengladbach,VfL Bochum,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,Werder Bremen,SV Darmstadt 98,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,FC Augsburg,SC Freiburg,23.02. ~ 25.02.2024
+23,2024-02-01,2024-02-25,VfB Stuttgart,1. FC Köln,23.02. ~ 25.02.2024
+24,2024-03-01,2024-03-03,1. FC Union Berlin,Borussia Dortmund,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,SC Freiburg,Bayern München,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,VfL Wolfsburg,VfB Stuttgart,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,1. FSV Mainz 05,Borussia Mönchengladbach,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,1. FC Köln,Bayer 04 Leverkusen,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,TSG Hoffenheim,Werder Bremen,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,VfL Bochum,RB Leipzig,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,1. FC Heidenheim,Eintracht Frankfurt,01.03. ~ 03.03.2024
+24,2024-03-01,2024-03-03,SV Darmstadt 98,FC Augsburg,01.03. ~ 03.03.2024
+25,2024-03-01,2024-03-10,Bayern München,1. FSV Mainz 05,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,RB Leipzig,SV Darmstadt 98,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,Bayer 04 Leverkusen,VfL Wolfsburg,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,Eintracht Frankfurt,TSG Hoffenheim,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,Borussia Mönchengladbach,1. FC Köln,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,Werder Bremen,Borussia Dortmund,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,VfL Bochum,SC Freiburg,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,FC Augsburg,1. FC Heidenheim,08.03. ~ 10.03.2024
+25,2024-03-01,2024-03-10,VfB Stuttgart,1. FC Union Berlin,08.03. ~ 10.03.2024
+26,2024-03-01,2024-03-17,Borussia Dortmund,Eintracht Frankfurt,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,1. FC Union Berlin,Werder Bremen,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,SC Freiburg,Bayer 04 Leverkusen,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,VfL Wolfsburg,FC Augsburg,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,1. FSV Mainz 05,VfL Bochum,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,1. FC Köln,RB Leipzig,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,TSG Hoffenheim,VfB Stuttgart,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,1. FC Heidenheim,Borussia Mönchengladbach,15.03. ~ 17.03.2024
+26,2024-03-01,2024-03-17,SV Darmstadt 98,Bayern München,15.03. ~ 17.03.2024
+27,2024-03-01,2024-03-31,Bayern München,Borussia Dortmund,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,RB Leipzig,1. FSV Mainz 05,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,Bayer 04 Leverkusen,TSG Hoffenheim,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,Eintracht Frankfurt,1. FC Union Berlin,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,Borussia Mönchengladbach,SC Freiburg,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,Werder Bremen,VfL Wolfsburg,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,VfL Bochum,SV Darmstadt 98,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,FC Augsburg,1. FC Köln,30.03. ~ 31.03.2024
+27,2024-03-01,2024-03-31,VfB Stuttgart,1. FC Heidenheim,30.03. ~ 31.03.2024
+28,2024-04-01,2024-04-07,Borussia Dortmund,VfB Stuttgart,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,1. FC Union Berlin,Bayer 04 Leverkusen,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,SC Freiburg,RB Leipzig,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,Eintracht Frankfurt,Werder Bremen,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,VfL Wolfsburg,Borussia Mönchengladbach,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,1. FSV Mainz 05,SV Darmstadt 98,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,1. FC Köln,VfL Bochum,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,TSG Hoffenheim,FC Augsburg,05.04. ~ 07.04.2024
+28,2024-04-01,2024-04-07,1. FC Heidenheim,Bayern München,05.04. ~ 07.04.2024
+29,2024-04-01,2024-04-14,Bayern München,1. FC Köln,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,RB Leipzig,VfL Wolfsburg,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,Bayer 04 Leverkusen,Werder Bremen,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,1. FSV Mainz 05,TSG Hoffenheim,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,Borussia Mönchengladbach,Borussia Dortmund,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,VfL Bochum,1. FC Heidenheim,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,FC Augsburg,1. FC Union Berlin,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,VfB Stuttgart,Eintracht Frankfurt,12.04. ~ 14.04.2024
+29,2024-04-01,2024-04-14,SV Darmstadt 98,SC Freiburg,12.04. ~ 14.04.2024
+30,2024-04-01,2024-04-21,Borussia Dortmund,Bayer 04 Leverkusen,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,1. FC Union Berlin,Bayern München,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,SC Freiburg,1. FSV Mainz 05,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,Eintracht Frankfurt,FC Augsburg,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,VfL Wolfsburg,VfL Bochum,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,1. FC Köln,SV Darmstadt 98,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,TSG Hoffenheim,Borussia Mönchengladbach,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,Werder Bremen,VfB Stuttgart,19.04. ~ 21.04.2024
+30,2024-04-01,2024-04-21,1. FC Heidenheim,RB Leipzig,19.04. ~ 21.04.2024
+31,2024-04-01,2024-04-28,Bayern München,Eintracht Frankfurt,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,RB Leipzig,Borussia Dortmund,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,SC Freiburg,VfL Wolfsburg,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,Bayer 04 Leverkusen,VfB Stuttgart,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,1. FSV Mainz 05,1. FC Köln,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,Borussia Mönchengladbach,1. FC Union Berlin,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,VfL Bochum,TSG Hoffenheim,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,FC Augsburg,Werder Bremen,26.04. ~ 28.04.2024
+31,2024-04-01,2024-04-28,SV Darmstadt 98,1. FC Heidenheim,26.04. ~ 28.04.2024
+32,2024-05-01,2024-05-05,Borussia Dortmund,FC Augsburg,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,1. FC Union Berlin,VfL Bochum,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,Eintracht Frankfurt,Bayer 04 Leverkusen,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,VfL Wolfsburg,SV Darmstadt 98,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,1. FC Köln,SC Freiburg,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,TSG Hoffenheim,RB Leipzig,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,Werder Bremen,Borussia Mönchengladbach,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,VfB Stuttgart,Bayern München,03.05. ~ 05.05.2024
+32,2024-05-01,2024-05-05,1. FC Heidenheim,1. FSV Mainz 05,03.05. ~ 05.05.2024
+33,2024-05-01,2024-05-12,Bayern München,VfL Wolfsburg,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,RB Leipzig,Werder Bremen,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,SC Freiburg,1. FC Heidenheim,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,1. FSV Mainz 05,Borussia Dortmund,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,Borussia Mönchengladbach,Eintracht Frankfurt,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,1. FC Köln,1. FC Union Berlin,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,VfL Bochum,Bayer 04 Leverkusen,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,FC Augsburg,VfB Stuttgart,10.05. ~ 12.05.2024
+33,2024-05-01,2024-05-12,SV Darmstadt 98,TSG Hoffenheim,10.05. ~ 12.05.2024
+34,2024-05-01,2024-05-18,VfL Wolfsburg,1. FSV Mainz 05,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,TSG Hoffenheim,Bayern München,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,Werder Bremen,VfL Bochum,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,VfB Stuttgart,Borussia Mönchengladbach,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,1. FC Heidenheim,1. FC Köln,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,Borussia Dortmund,SV Darmstadt 98,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,1. FC Union Berlin,SC Freiburg,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,Bayer 04 Leverkusen,FC Augsburg,"Samstag,18.05.202415:30 Uhr"
+34,2024-05-01,2024-05-18,Eintracht Frankfurt,RB Leipzig,"Samstag,18.05.202415:30 Uhr"
