@@ -8,6 +8,7 @@ bundestrainer <- bundestrainer %>%
   mutate(across(c(coach_from, coach_to), dmy),
          coach_to = replace_na(coach_to, today()))
 
+# Run 01-scrape-results.R first
 results %>% 
   count(match_date, sort = TRUE)
 
