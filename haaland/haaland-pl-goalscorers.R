@@ -16,9 +16,20 @@ player_league_stats <- map(
     season_end_year = .x,
     tier = "1st",
     stat_type = "shooting",
-    team_or_player = "player"
+    team_or_player = "player",
+    time_pause = 1
   )
 )
+player_league_stats <- set_names(player_league_stats, as.character(season_end_years))
+write_rds(player_league_stats, here(base_path, "player_league_stats.rds"))
+player_league_stats <- read_rds(here(base_path, "player_league_stats.rds"))
+
+# Filter all goalscorers
+player_league_stats %>% 
+  map(~mutate(.x, Age = as.numeric(Age))) %>% 
+  bind_rows() %>% 
+  filter(Gls_Standard > 0) %>% 
+  select(Player, Age, Gls = Gls_Standard)
 
 # wrapper to extract top goalscorer(s) for a given season
 select_top_goalscorer <- function(df) {
@@ -31,7 +42,6 @@ top_goalscorers <- map(player_league_stats, select_top_goalscorer) %>%
   set_names(season_end_years) %>% 
   bind_rows(.id = "season_end_year")
 write_rds(top_goalscorers, here(base_path, "top_goalscorers.rds"))
-
 top_goalscorers <- read_rds(here(base_path, "top_goalscorers.rds"))
 
 # get player URLs
@@ -166,7 +176,7 @@ p <-
   filter(!(Season > "1994-1995" & matchweek > 38) & 
            !(Season == max(Season) & matchweek > matchweeks_max_current_season)) %>% 
   # TEMP
-  # add_row(Player = "Erling Haaland", Season = "2022-2023", matchweek = 30, gls = 2, gls_cumul = 30) %>% 
+  add_row(Player = "Erling Haaland", Season = "2022-2023", matchweek = 38, gls = 0, gls_cumul = goals_haaland) %>% 
   ggplot(aes(matchweek, gls_cumul, group = paste(Player, Season, sep = "#"))) +
   geom_bump(
     smooth = 5, color = "grey50", linewidth = 0.1
@@ -184,12 +194,11 @@ p <-
     title = "<span style='color:#FF9B42'>Erling Haaland</span> has set a new
     goalscoring Premier League record",
     subtitle = glue::glue(
-    "Haaland has scored {goals_haaland} Premier League goals after
-    {matchweeks_max_current_season} games.
+    "Haaland scored {goals_haaland} Premier League goals in the 2022-2023 season.
     The graph shows Haaland's goalscoring progression compared to the other 
     season's top scorers in the Premier League. 
-    The top 5 season top goalscorers are presented. The progress of all other topscorers
-    is shown in the background.
+    The top 5 season top goalscorers are presented. 
+    The progress of all other topscorers is shown in the background.
     "),
     caption = "Data: FBRef, {worldfootballR} package. Visualisation: Ansgar Wolsing",
     x = "Matchweek",
@@ -211,7 +220,7 @@ p <-
     plot.subtitle = element_textbox(width = 0.97),
     plot.caption = element_markdown()
   )
-ggsave(here(base_path, "haaland-pl-goalscorers-20230503.png"), width = 8, height = 5)
+ggsave(here(base_path, "haaland-pl-goalscorers-20230528.png"), width = 8, height = 5)
 
 
 top_goalscorers_match_logs %>% 
@@ -223,3 +232,41 @@ top_goalscorers_match_logs %>%
   ungroup() %>% 
   filter(Round == "Matchweek 27") %>% 
   select(Player, Season, gls_cumul) 
+
+
+
+#### "Growing" lines per season's topscorers
+
+top_goalscorers_match_logs %>% 
+  bind_rows() %>% 
+  filter(Comp == "Premier League") %>% 
+  mutate(Date = ymd(Date)) %>% 
+  arrange(Player, Date) %>% 
+  count(Player, Season, Date, wt = Gls_Performance, name = "gls") %>% 
+  group_by(Player, Season) %>% 
+  mutate(gls_cumul = cumsum(gls)) %>% 
+  ungroup() %>% 
+  ggplot(aes(Date, gls_cumul, group = paste(Player, Season))) +
+  geom_step()
+
+
+
+
+# Filter all goalscorers
+player_league_stats %>% 
+  map(~mutate(.x, Age = as.numeric(Age))) %>% 
+  bind_rows(.id = "season_end_year") %>% 
+  filter(Gls_Standard > 0) %>% 
+  mutate(Age = ifelse(is.na(Age), as.numeric(season_end_year) - Born, Age)) %>% 
+  select(season_end_year, Player, Age, Gls = Gls_Standard) %>% 
+  ggplot(aes(Age, Gls, group = Player)) + 
+  geom_point(alpha = 0.5, shape = 21, size = 1, fill = "grey70",
+             position = position_jitter(seed = 1, height = 0.2, width = 0.4)) +
+  geom_point(
+    data = ~subset(., Player == "Alan Shearer"),
+    alpha = 0.5, shape = 21, size = 2, fill = "darkblue",
+    position = position_jitter(seed = 1, height = 0.2, width = 0.4)) +
+  geom_line(
+    data = ~subset(., Player == "Alan Shearer"),
+    alpha = 0.5,  col = "darkblue") + 
+  theme_light()
