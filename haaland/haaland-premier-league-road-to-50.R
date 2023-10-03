@@ -210,9 +210,11 @@ match_logs_prep %>%
   labs(
     title = glue::glue("<span style='color:{haaland_color}'>Erling Haaland</span> to become the
     fastest player to score 50 Premier League goals"),
-    subtitle = "The current record holder is Andy Cole who needed 65 matches to 
-    reach 50 Premier League. Haaland has scored 44 goals in 41 appearances (1.07 goals per match).
-    He would still beat Cole's record if he needed 23 matches to score 6 more goals (0.26 goals per match).",
+    subtitle = " Haaland has scored 44 goals in 41 appearances (1.07 goals per match).
+    The current record holder is Andy Cole who needed 65 matches to 
+    reach 50 Premier League goals.
+    Haaland would still beat Cole's record if he needed 23 matches to score 6 more goals
+    (0.26 goals per match - a quarter of his currrent goal scoring rate).",
     caption = "Data: FBRef.com. Visualization: Ansgar Wolsing",
     x = "Matches played",
     y = "Goals scored (cumulative)"
@@ -225,8 +227,16 @@ match_logs_prep %>%
     text = element_text(lineheight = 1),
     strip.text = element_text(face = "bold", size = 10),
     plot.title = element_markdown(face = "bold"),
-    plot.subtitle = element_textbox(width = 1),
+    plot.subtitle = element_textbox(width = 0.95),
     plot.title.position = "plot"
   )
 ggsave(here(base_path, "haaland-pl-fastest-to-score-50-goals.png"),
        width = 8, height = 7)
+
+
+
+## how many goals had the other played scored after x matches? 
+match_logs_prep %>% 
+  filter(match_id == 41) %>% 
+  select(Player, goals_cumul) %>% 
+  arrange(-goals_cumul)
