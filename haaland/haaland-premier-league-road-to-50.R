@@ -180,29 +180,6 @@ match_logs_prep %>%
     vjust = -0.33, hjust = -0.33, col = haaland_color, size = 3,
     family = "Cabinet Grotesk", fontface = "bold"
   ) +
-  # annotate(
-  #   "segment",
-  #   x = match_logs_prep_haaland_last_match$match_id,
-  #   xend = match_logs_prep_haaland_last_match$match_id,
-  #   y = 0, yend = match_logs_prep_haaland_last_match$goals_cumul,
-  #   col = "#64113F", linetype = "dashed"
-  # ) +
-  # geom_segment(
-  #   data = match_logs_prep_haaland_last_match,
-  #   aes(
-  #     x = match_id, xend = match_id,
-  #     y = 0, yend = goals_cumul
-  #   ),
-  #   col = "#64113F", linetype = "dashed"
-  # ) +
-  # geom_segment(
-  #   data = match_logs_prep_haaland_last_match,
-  #   aes(
-  #     x = 0, xend = match_id,
-  #     y = goals_cumul, yend = goals_cumul
-  #   ),
-  #   col = "#64113F", linetype = "dashed"
-  # ) +
   scale_color_manual(values = c("TRUE" = haaland_color, "FALSE" = "#7678ED")) +
   facet_wrap(vars(Player_facet)) +
   coord_cartesian(clip = "off") +
@@ -210,11 +187,17 @@ match_logs_prep %>%
   labs(
     title = glue::glue("<span style='color:{haaland_color}'>Erling Haaland</span> to become the
     fastest player to score 50 Premier League goals"),
-    subtitle = " Haaland has scored 44 goals in 41 appearances (1.07 goals per match).
+    subtitle = sprintf("Haaland has scored %d goals in %d appearances (%1.2f goals per match).
     The current record holder is Andy Cole who needed 65 matches to 
     reach 50 Premier League goals.
     Haaland would still beat Cole's record if he needed 23 matches to score 6 more goals
-    (0.26 goals per match - a quarter of his currrent goal scoring rate).",
+    (0.26 goals per match - a quarter of his currrent goal scoring rate).", 
+                       match_logs_prep_haaland_last_match$match_id,
+                       match_logs_prep_haaland_last_match$goals_cumul,
+                       match_logs_prep_haaland_last_match$goals_cumul / 
+                         match_logs_prep_haaland_last_match$match_id
+                       
+                       ),
     caption = "Data: FBRef.com. Visualization: Ansgar Wolsing",
     x = "Matches played",
     y = "Goals scored (cumulative)"
