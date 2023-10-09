@@ -43,7 +43,7 @@ df_prep %>%
   ggplot(aes(total_npxG, n_non_penalty_goals)) +
   geom_abline(
     aes(intercept = 0, slope = 1),
-    color = "#E5446D", linetype = "dashed", size = 1
+    color = "#E5446D", linetype = "dashed", linewidth = 1
   ) +
   geom_point(
     data = ~subset(., player == "Serhou Guirassy"),
@@ -90,7 +90,7 @@ df_prep %>%
     plot.subtitle = element_textbox(width = 0.95, lineheight = 1),
     legend.position = "bottom"
   )
-ggsave(here(base_path, "bundesliga-players-npxg-vs-goals-20230930.png"),
+ggsave(here(base_path, "bundesliga-players-npxg-vs-goals-20231007.png"),
        width = 6, height = 5)
 
 # Histogram of shots
@@ -124,6 +124,6 @@ shot_locations %>%
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank()
   )
-ggsave(here(base_path, "bundesliga-players-shots-histogram-20230930.png"),
+ggsave(here(base_path, "bundesliga-players-shots-histogram-20231007.png"),
        width = 6, height = 5)
 

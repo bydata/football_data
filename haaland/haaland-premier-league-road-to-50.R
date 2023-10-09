@@ -230,7 +230,7 @@ match_logs_prep %>%
     plot.subtitle = element_textbox(width = 0.95),
     plot.title.position = "plot"
   )
-ggsave(here(base_path, "haaland-pl-fastest-to-score-50-goals.png"),
+ggsave(here(base_path, "haaland-pl-fastest-to-score-50-goals-20231008.png"),
        width = 8, height = 7)
 
 
