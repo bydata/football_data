@@ -150,7 +150,7 @@ match_logs_prep_haaland_last_match <- match_logs_prep_haaland %>%
   mutate(Player_facet = factor(
     Player, levels = c("Erling Haaland", matches_needed_to_score_50$Player)))
 
-haaland_color <- "#4BC07E" #"#18dc82"
+haaland_color <- "#4BC07E" 
 
 match_logs_prep %>% 
   inner_join(matches_needed_to_score_50, 
@@ -190,10 +190,10 @@ match_logs_prep %>%
     subtitle = sprintf("Haaland has scored %d goals in %d appearances (%1.2f goals per match).
     The current record holder is Andy Cole who needed 65 matches to 
     reach 50 Premier League goals.
-    Haaland would still beat Cole's record if he needed 23 matches to score 6 more goals
-    (0.26 goals per match - a quarter of his currrent goal scoring rate).", 
-                       match_logs_prep_haaland_last_match$match_id,
+    Haaland would still beat Cole's record if he needed 19 matches to score 3 more goals
+    (0.16 goals per match - less than a sixth of his currrent goal scoring rate).", 
                        match_logs_prep_haaland_last_match$goals_cumul,
+                       match_logs_prep_haaland_last_match$match_id,
                        match_logs_prep_haaland_last_match$goals_cumul / 
                          match_logs_prep_haaland_last_match$match_id
                        
@@ -213,13 +213,13 @@ match_logs_prep %>%
     plot.subtitle = element_textbox(width = 0.95),
     plot.title.position = "plot"
   )
-ggsave(here(base_path, "haaland-pl-fastest-to-score-50-goals-20231008.png"),
+ggsave(here(base_path, "haaland-pl-fastest-to-score-50-goals-20231029.png"),
        width = 8, height = 7)
 
 
 
 ## how many goals had the other played scored after x matches? 
 match_logs_prep %>% 
-  filter(match_id == 41) %>% 
+  filter(match_id == 45) %>% 
   select(Player, goals_cumul) %>% 
   arrange(-goals_cumul)
