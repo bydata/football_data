@@ -42,10 +42,17 @@ results_against_fcb <- df %>%
   filter(team != "Bayern Munich") %>% 
   select(-c(homegoals, awaygoals, home_goaldiff, winner, winner_fcb)) %>% 
   rename(goaldiff = opponent_goaldiff, result = opponent_result) %>% 
+  # Add row for Werder win 21.01.2024 (TEMP)
+  add_row(
+    season_end_year = 2024, wk = "18", goaldiff = 1, result = "Win",
+    home_away = "home", team = "Werder Bremen"
+  ) %>% 
   mutate(
+    wk = as.numeric(wk),
     home_away = factor(home_away, levels = c("home", "away")),
     result = factor(result, levels = c("Win", "Draw", "Loss")))
 
+  
 threshold_matches <- 6
 
 results_against_fcb %>% 
@@ -147,7 +154,7 @@ results_against_fcb_with_aggregates %>%
   mutate(
     result = c("Win" = "Sieg", "Draw" = "Unentschieden", "Loss" = "Niederlage")[result],
     result = factor(result, levels = c("Sieg", "Unentschieden", "Niederlage")),
-    team_label = if_else(team == "Dortmund", sprintf("**%s**", team_label), team_label),
+    # team_label = if_else(team == "Dortmund", sprintf("**%s**", team_label), team_label),
     team_label = fct_reorder(team_label, -share_losses),
     home_away = factor(home_away, levels = c("total", "home", "away"),
                        labels = c("Alle Spiele", "Heimspiele", "In München"))
@@ -164,11 +171,14 @@ results_against_fcb_with_aggregates %>%
   facet_wrap(vars(home_away), ncol = 3) +
   guides(fill = guide_legend(reverse = TRUE)) +
   labs(
-    title = "Wer hat Angst vorm FCB?",
-    subtitle = "Ergebnisse gegen den **FC Bayern München** in Bundesliga-Spielen 
-    seit der Saison 2015/'16.",
+    title = "Angstgegner Mönchengladbach",
+    subtitle = "Ergebnisse gegen **Bayern München** in Bundesliga-Spielen 
+    seit der Saison 2015/'16.<br>(In Klammern die Anzahl der Begegnungen.)",
+    caption = "Ausgewählt sind alle Vereine, die im angegebenen Zeitraum mindestens
+    sechs Spiele gegen Bayern München bestritten haben.<br>
+    Daten: FBRef.com. Visualisierung: Ansgar Wolsing.",
     x = NULL,
-    y = "Share of matches (%)",
+    y = "Anteil Spiele (%)",
     fill = NULL
   ) +
   theme_minimal(base_family = "Outfit") +
@@ -187,10 +197,13 @@ results_against_fcb_with_aggregates %>%
     plot.title = element_text(family = "Outfit Semibold"),
     plot.title.position = "plot",
     plot.subtitle = element_textbox(
-      width = 0.95, hjust = 0, margin = margin(t = 4, b = 24))
+      width = 0.95, hjust = 0, lineheight = 1.1, margin = margin(t = 4, b = 24)),
+    plot.caption = element_textbox(
+      width = 0.95, hjust = 0, size = 7, lineheight = 1),
+    plot.caption.position = "plot"
   )
 ggsave(here(base_path, "fcb-worst-opponents.png"),
-       width = 4, height = 3, scale = 1.75)
+       width = 4, height = 3, scale = 1.83)
 
 
 
