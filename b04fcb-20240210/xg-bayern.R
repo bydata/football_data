@@ -11,7 +11,8 @@ results_fbref_previous_seasons <- load_match_results(country = "GER", gender = "
 results_fbref_current_season <- fb_match_results(country = "GER", gender = "M", tier = "1st",
                                                    season_end_year = 2024)
 results_fbref_combined <- bind_rows(results_fbref_previous_seasons, results_fbref_current_season) %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  mutate(wk = as.numeric(wk))
 
 results_fbref_long <- results_fbref_combined %>% 
   mutate(
@@ -23,12 +24,12 @@ results_fbref_long <- results_fbref_combined %>%
   mutate(
     xG = ifelse(home_away == "home_team", home_xg, away_xg),
     goals = ifelse(home_away == "home_team", home_goals, away_goals)) %>% 
-  select(-matches("home_|away_")) %>% 
-  filter(!is.na(goals))
+  select(-matches("home_|away_")) 
 
-xg_fcb_b04fcb <- results_fbref_long$xG[results_fbref_long$team == "Bayern Munich" & 
-                                         results_fbref_long$season_end_year == 2024 &
-                                         results_fbref_long$wk == 21]
+xg_fcb_b04fcb <- results_fbref_long$xG[
+  results_fbref_long$team == "Bayern Munich" & 
+    results_fbref_long$season_end_year == 2024 &
+    results_fbref_long$wk == 21]
 
 results_fbref_long %>% 
   filter(team == "Bayern Munich") %>% 
