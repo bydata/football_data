@@ -42,10 +42,10 @@ results_against_fcb <- df %>%
   filter(team != "Bayern Munich") %>% 
   select(-c(homegoals, awaygoals, home_goaldiff, winner, winner_fcb)) %>% 
   rename(goaldiff = opponent_goaldiff, result = opponent_result) %>% 
-  # Add row for Werder win 21.01.2024 (TEMP)
+  # Add row for Bochum win 2024-02-18 (TEMP)
   add_row(
-    season_end_year = 2024, wk = "18", goaldiff = 1, result = "Win",
-    home_away = "home", team = "Werder Bremen"
+    season_end_year = 2024, wk = "22", goaldiff = 1, result = "Win",
+    home_away = "home", team = "Bochum"
   ) %>% 
   mutate(
     wk = as.numeric(wk),
@@ -59,7 +59,6 @@ results_against_fcb %>%
   count(team, sort = TRUE) %>% 
   filter(n >= threshold_matches) %>% 
   nrow()
-
 
 results_against_fcb %>% 
   group_by(team) %>% 
@@ -175,7 +174,7 @@ results_against_fcb_with_aggregates %>%
     subtitle = "Ergebnisse gegen **Bayern München** in Bundesliga-Spielen 
     seit der Saison 2015/'16.<br>(In Klammern die Anzahl der Begegnungen.)",
     caption = "Ausgewählt sind alle Vereine, die im angegebenen Zeitraum mindestens
-    sechs Spiele gegen Bayern München bestritten haben.<br>
+    sechs Spiele gegen Bayern München bestritten haben (Stand: 18.02.2024).<br>
     Daten: FBRef.com. Visualisierung: Ansgar Wolsing.",
     x = NULL,
     y = "Anteil Spiele (%)",
