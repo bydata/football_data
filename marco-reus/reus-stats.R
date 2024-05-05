@@ -32,7 +32,7 @@ plot_titles <- list(
     <b style='color:#E20024'>Rot Weiss Ahlen</b>, 
     <b style='color:white'>Borussia M'Gladbach</b>, and
     <b style='color:#FDE100'>Borussia Dortmund</b>",
-    caption = "2023-2024 figures as of matchday 31.<br>
+    caption = "2023-2024 figures as of matchday 32.<br>
     Source: FBRef.com.
     Image credit: Tim Reckmann (CC BY-SA 3.0). 
     Visualization: Ansgar Wolsing",
@@ -46,7 +46,7 @@ plot_titles <- list(
     <b style='color:#E20024'>Rot Weiss Ahlen</b>, 
     <b style='color:white'>Borussia M'Gladbach</b> und
     <b style='color:#FDE100'>Borussia Dortmund</b>",
-    caption = "Saison 2023-24 bis 31. Spieltag<br>
+    caption = "Saison 2023-24 bis 32. Spieltag<br>
     Daten: FBRef.com.
     Bild: Tim Reckmann (CC BY-SA 3.0). 
     Visualisierung: Ansgar Wolsing",
@@ -55,6 +55,7 @@ plot_titles <- list(
   )
 )
 
+# Gradient fill for the plot background
 gradient_fill <- grid::linearGradient(c("grey6", "grey14"))
 
 
